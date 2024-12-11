@@ -11,6 +11,7 @@ const Movies = () => {
   const [query, setQuery] = useState("")
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const [maxPage, setMaxPage] = useState(1);
 
   const onSearchSubmit = async (value: string) => {
     setMovies([]);
@@ -51,7 +52,7 @@ const Movies = () => {
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
 
-    if (Math.round(scrollTop + clientHeight) >= scrollHeight - 20) {
+    if (Math.round(scrollTop + clientHeight) >= scrollHeight - 20 && maxPage > page) {
       setPage((page) => page + 1);
     }
   };
@@ -64,13 +65,14 @@ const Movies = () => {
 
       const response = await nitflexApiAxios.get(`/movies?query=${query}&page=${page}`);
 
-      const responeMovies = response.data.data.results as Array<Movie>;
+      const responeMovies = response.data.data
 
       setIsLoading(false);
 
       if (responeMovies.length === 0) return;
 
-      setMovies((prev) => [...prev, [...responeMovies]]);
+      setMaxPage(responeMovies.total_pages);
+      setMovies((prev) => [...prev, [...responeMovies.results]]);
     };
 
     const debounce = setTimeout(() => getMovies(), 500);
