@@ -16,17 +16,34 @@ function MovieList(props: MovieListProps) {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      {gridImages.map((collumn, index) => (
+      {gridImages.map((column, index) => (
         <div className="grid gap-4" key={index}>
-          {collumn.map((movie) => (
-            <div key={movie.id}>
-              <Link to={`/movies/${movie.id}`} className="text-blue-500">
+          {column.map((movie) => (
+            <div key={movie.id} className="card bg-base-100 shadow-xl">
+              <figure>
                 <img
-                  className="h-auto max-w-full rounded-lg"
+                  className="h-auto max-w-full rounded-t-lg"
                   src={movie.poster_path}
                   alt={movie.title}
                 />
-              </Link>
+              </figure>
+              <div className="card-body px-4 py-3">
+                <h2 className="card-title">{movie.title}</h2>
+                <p className="text-gray-700">
+                  {movie.overview.length > 100 ? (
+                    <>
+                      {movie.overview.substring(0, 100)}...
+                    </>
+                  ) : (
+                    movie.overview
+                  )}
+                </p>
+                <div className="card-actions justify-end">
+                  <Link to={`/movies/${movie.id}`} className="btn btn-primary">
+                    View Details
+                  </Link>
+                </div>
+              </div>
             </div>
           ))}
         </div>
