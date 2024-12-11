@@ -29,14 +29,8 @@ function MovieList(props: MovieListProps) {
               </figure>
               <div className="card-body px-4 py-3">
                 <h2 className="card-title">{movie.title}</h2>
-                <p className="text-gray-700">
-                  {movie.overview.length > 100 ? (
-                    <>
-                      {movie.overview.substring(0, 100)}...
-                    </>
-                  ) : (
-                    movie.overview
-                  )}
+                <p className="text-gray-700 h-fit">
+                  {movie.release_date} - {movie.vote_average} / 10
                 </p>
                 <div className="card-actions justify-end">
                   <Link to={`/movies/${movie.id}`} className="btn btn-primary">
