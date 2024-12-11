@@ -21,7 +21,7 @@
     "paths": {
       "@components/*": ["./src/components/*"],
       "@assets/*": ["./src/assets/*"],
-      "@axios/*": ["./src/axios/*"],
+      "@libs/*": ["src/libs/*"],
     }
   },
   "include": ["src", "*.cjs", "*.ts", "*.js"],

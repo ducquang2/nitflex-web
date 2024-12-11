@@ -3,33 +3,40 @@ import { ToastContainer } from 'react-toastify';
 
 import { AuthProvider } from '@components/AuthProvider';
 import NavBar from '@components/NavBar';
-import ProtectedRoute from '@components/ProtectedRoute';
 
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Profile from './pages/Profile';
-import Register from './pages/Register';
+import { getRoutes } from '@libs/utils/helpers';
 
-import 'react-toastify/dist/ReactToastify.css';
+import { Error, ProtectedRoute } from './pages';
 
 const App = () => {
+  const routes = getRoutes();
+
   return (
     <AuthProvider>
       <Router>
-        <div className="h-dvh">
-          <NavBar title="NitFlex" />
+        <NavBar title="NitFlex" />
+        <div className="h-[calc(100dvh-4.25rem)]">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
+            {routes.public.map((route) => (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={<route.main />}
+              />
+            ))}
+            {routes.private.map((route) => (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={
+                  <ProtectedRoute>
+                    <route.main />
+                  </ProtectedRoute>
+                }
+              />
+            ))}
+            <Route path="/error" element={<Error status={503} message="You don't have permission to view." />} />
+            <Route path="*" element={<Error status={404} message="Page not found." />} />
           </Routes>
         </div>
       </Router>

@@ -1,10 +1,10 @@
 import { useGoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 
-import GoogleIcon from '@assets/google-icon.png';
-import nitflexApiAxios from "@axios/nitflex-api";
+import GoogleIcon from '@assets/images/google-icon.png';
+import nitflexApiAxios from "@libs/axios/nitflex-api";
 
-import { useToast } from "src/hooks/useToast";
+import { useToast } from "src/libs/hooks/useToast";
 
 import { useAuth } from "./AuthProvider";
 

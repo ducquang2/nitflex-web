@@ -47,4 +47,7 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default {
+  path: '/profile',
+  main: Profile,
+}

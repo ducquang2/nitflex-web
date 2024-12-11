@@ -1,10 +1,12 @@
+import { Link } from 'react-router-dom';
+
 import { useAuth } from '@components/AuthProvider';
 
 const Home = () => {
   const { token } = useAuth();
 
   return (
-    <div className="hero h-[calc(100%-5rem)] bg-base-200">
+    <div className="hero h-[calc(100dvh-5rem)] bg-base-200">
       <div className="hero-content text-center">
         <div className="max-w-md">
           <h1 className="text-5xl font-bold">
@@ -19,10 +21,16 @@ const Home = () => {
               </p>
             )}
           </div>
+          <div>
+            <Link to="/movies" className="btn btn-primary">Find Movies</Link>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Home;
+export default {
+  path: '/',
+  main: Home,
+}

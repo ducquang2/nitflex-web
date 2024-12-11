@@ -22,7 +22,7 @@ const NavBar = (props: NavBarProps) => {
         </Link>
       </div>
       <div className="flex-none">
-        <ul className="menu menu-horizontal px-1">
+        <ul className="menu menu-horizontal px-1 gap-1">
           {token ? (
             <>
               <li><Link to="/users">Users</Link></li>
