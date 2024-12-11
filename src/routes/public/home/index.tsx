@@ -8,33 +8,23 @@ import { Movie } from '@libs/utils/types';
 const Home = () => {
   const { token } = useAuth();
 
-  const [dayTrendingMovies, setDayTrendingMovies] = useState<Array<Movie>>([]);
-  const [weekTrendingMovies, setWeekTrendingMovies] = useState<Array<Movie>>([]);
+  const [trendingMovies, setTrendingMovies] = useState<Array<Movie>>([]);
+  const [timeWindow, setTimeWindow] = useState<'day' | 'week'>('day');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
 
     const getTrendingMovies = async () => {
-      const responseDay = await nitflexApiAxios.get('/movies/trending?time_window=day');
-      const responseWeek = await nitflexApiAxios.get('/movies/trending?time_window=week');
+      const responseDay = await nitflexApiAxios.get(`/movies/trending?time_window=${timeWindow}`);
 
       setIsLoading(false);
 
-      setDayTrendingMovies(responseDay.data.data);
-      setWeekTrendingMovies(responseWeek.data.data);
+      setTrendingMovies(responseDay.data.data);
     };
 
     getTrendingMovies();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="h-full flex justify-center items-center">
-        <span className="loading loading-bars loading-lg" />
-      </div>
-    );
-  }
+  }, [timeWindow]);
 
   return (
     <div className="min-h-[calc(100dvh-5rem)] container mx-auto p-4">
@@ -61,59 +51,54 @@ const Home = () => {
       </div>
 
       <div className="my-8">
-        <h2 className="text-3xl font-bold mb-4">Today Trending Movies</h2>
-        <div className="carousel carousel-center w-full bg-neutral rounded-box space-x-4 p-4">
-          {dayTrendingMovies.map((movie) => (
-            <div key={movie.id} className="carousel-item w-1/3 md:w-1/4 rounded-box">
-              <div className="card w-full bg-base-100 shadow-xl">
-                <figure className="relative">
-                  <img src={movie.poster_path} alt={movie.title} className="h-[300px] w-full object-cover" />
-                  <div className="absolute bottom-0 left-0 bg-black bg-opacity-50 text-white p-2">
-                    <p className="text-sm">{movie.release_date}</p>
-                  </div>
-                </figure>
-                <div className="card-body p-4">
-                  <h2 className="card-title text-lg font-bold">{movie.title}</h2>
-                  <p className="text-gray-700 text-sm truncate">{movie.overview}</p>
-                  <div className="card-actions justify-end mt-2">
-                    <Link to={`/movies/${movie.id}`} className="btn btn-primary btn-sm">
-                      View Details
-                    </Link>
+        <div className="flex justify-between items-center mb-4">
+
+          <h2 className="text-3xl font-bold">
+            {timeWindow === 'day' ? "Today" : "Week"} Trending Movies
+          </h2>
+          <div className="dropdown dropdown-end">
+            <label tabIndex={0} className="btn m-1">Time Window</label>
+            <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-10">
+              <li>
+                <button onClick={() => setTimeWindow('day')}>Today</button>
+              </li>
+              <li>
+                <button onClick={() => setTimeWindow('week')}>This Week</button>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {isLoading ? (
+          <div className="h-full flex justify-center items-center">
+            <span className="loading loading-bars loading-lg" />
+          </div>
+        ) : (
+          <div className="carousel carousel-center w-full bg-neutral rounded-box space-x-4 p-4">
+            {trendingMovies.map((movie) => (
+              <div key={movie.id} className="carousel-item w-1/3 md:w-1/4 rounded-box">
+                <div className="card w-full bg-base-100 shadow-xl">
+                  <figure className="relative">
+                    <img src={movie.poster_path} alt={movie.title} className="h-[300px] w-full object-cover" />
+                    <div className="absolute bottom-0 left-0 bg-black bg-opacity-50 text-white p-2">
+                      <p className="text-sm">{movie.release_date}</p>
+                    </div>
+                  </figure>
+                  <div className="card-body p-4">
+                    <h2 className="card-title text-lg font-bold">{movie.title}</h2>
+                    <p className="text-gray-700 text-sm truncate">{movie.overview}</p>
+                    <div className="card-actions justify-end mt-2">
+                      <Link to={`/movies/${movie.id}`} className="btn btn-primary btn-sm">
+                        View Details
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
-
-      <div className="my-8">
-        <h2 className="text-3xl font-bold mb-4">This Week Trending Movies</h2>
-        <div className="carousel carousel-center w-full bg-neutral rounded-box space-x-4 p-4">
-          {weekTrendingMovies.map((movie) => (
-            <div key={movie.id} className="carousel-item w-1/3 md:w-1/4 rounded-box">
-              <div className="card w-full bg-base-100 shadow-xl">
-                <figure className="relative">
-                  <img src={movie.poster_path} alt={movie.title} className="h-[300px] w-full object-cover" />
-                  <div className="absolute bottom-0 left-0 bg-black bg-opacity-50 text-white p-2">
-                    <p className="text-sm">{movie.release_date}</p>
-                  </div>
-                </figure>
-                <div className="card-body p-4">
-                  <h2 className="card-title text-lg font-bold">{movie.title}</h2>
-                  <p className="text-gray-700 text-sm truncate">{movie.overview}</p>
-                  <div className="card-actions justify-end mt-2">
-                    <Link to={`/movies/${movie.id}`} className="btn btn-primary btn-sm">
-                      View Details
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
     </div>
   );
 };

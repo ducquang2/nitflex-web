@@ -19,16 +19,17 @@ function MovieList(props: MovieListProps) {
       {gridImages.map((column, index) => (
         <div className="grid gap-4" key={index}>
           {column.map((movie) => (
-            <div key={movie.id} className="card bg-base-100 shadow-xl">
-              <figure>
+            <div key={movie.id} className="card w-full bg-base-100 shadow-xl">
+              <figure className="relative">
                 <img
-                  className="h-auto max-w-full rounded-t-lg"
-                  src={movie.poster_path}
-                  alt={movie.title}
+                  src={movie.poster_path} alt={movie.title} className="h-[300px] w-full object-cover"
                 />
+                <div className="absolute bottom-0 left-0 bg-black bg-opacity-50 text-white p-2">
+                  <p className="text-sm">{movie.release_date}</p>
+                </div>
               </figure>
-              <div className="card-body px-4 py-3">
-                <h2 className="card-title">{movie.title}</h2>
+              <div className="card-body p-4">
+                <h2 className="card-title text-lg font-bold">{movie.title}</h2>
                 <p className="text-gray-700 h-fit">
                   {movie.release_date} - {movie.vote_average} / 10
                 </p>
