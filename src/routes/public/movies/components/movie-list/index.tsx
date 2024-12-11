@@ -16,9 +16,9 @@ function MovieList(props: MovieListProps) {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      {gridImages.map((column, index) => (
+      {gridImages?.map((column, index) => (
         <div className="grid gap-4" key={index}>
-          {column.map((movie) => (
+          {column?.map((movie) => (
             <div key={movie.id} className="card w-full bg-base-100 shadow-xl">
               <figure className="relative">
                 <img
