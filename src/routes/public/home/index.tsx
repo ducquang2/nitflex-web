@@ -75,7 +75,7 @@ const Home = () => {
           </div>
         ) : (
           <div className="carousel carousel-center w-full bg-neutral rounded-box space-x-4 p-4">
-            {trendingMovies.map((movie) => (
+            {trendingMovies?.length && trendingMovies.map((movie) => (
               <div key={movie.id} className="carousel-item w-1/3 md:w-1/4 rounded-box">
                 <div className="card w-full bg-base-100 shadow-xl">
                   <figure className="relative">
