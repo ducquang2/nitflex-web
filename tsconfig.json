@@ -22,6 +22,7 @@
       "@components/*": ["./src/components/*"],
       "@assets/*": ["./src/assets/*"],
       "@libs/*": ["src/libs/*"],
+      "@apis/*": ["src/apis/*"],
     }
   },
   "include": ["src", "*.cjs", "*.ts", "*.js"],
