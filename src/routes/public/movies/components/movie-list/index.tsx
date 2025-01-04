@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import { splitToSmallChunks } from "@libs/utils/helpers";
+import { addImagePrefix, splitToSmallChunks } from "@libs/utils/helpers";
 import { Movie } from "@libs/utils/types";
 
 export { MovieList };
@@ -22,7 +22,7 @@ function MovieList(props: MovieListProps) {
             <div key={movie.id} className="card w-full bg-base-100 shadow-xl">
               <figure className="relative">
                 <img
-                  src={movie.poster_path} alt={movie.title} className="h-[300px] w-full object-cover"
+                  src={addImagePrefix(movie.poster_path)} alt={movie.title} className="h-[300px] w-full object-cover"
                 />
                 <div className="absolute bottom-0 left-0 bg-black bg-opacity-50 text-white p-2">
                   <p className="text-sm">{movie.release_date}</p>
