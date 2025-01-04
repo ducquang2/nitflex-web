@@ -1,3 +1,4 @@
+import Casts from "./public/casts";
 import Home from "./public/home";
 import Login from "./public/login";
 import { MovieDetail, MovieGallery } from "./public/movies";
@@ -9,7 +10,8 @@ export default {
     Login,
     Register,
     MovieGallery,
-    MovieDetail
+    MovieDetail,
+    Casts
   ],
   private: []
 };
