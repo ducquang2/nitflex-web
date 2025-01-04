@@ -13,6 +13,8 @@
     "@hookform/resolvers": "^3.9.1",
     "@react-oauth/google": "^0.12.1",
     "axios": "^1.7.9",
+    "classnames": "^2.5.1",
+    "dayjs": "^1.11.13",
     "lodash": "^4.17.21",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
