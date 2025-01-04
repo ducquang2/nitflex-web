@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { get_trending_movies } from '@apis/movies';
 import { useAuth } from '@components/AuthProvider';
-import nitflexApiAxios from '@libs/axios/nitflex-api';
 import { Movie } from '@libs/utils/types';
 
 const Home = () => {
@@ -16,11 +16,10 @@ const Home = () => {
     setIsLoading(true);
 
     const getTrendingMovies = async () => {
-      const responseDay = await nitflexApiAxios.get(`/movies/trending?time_window=${timeWindow}`);
+      const responseDay = await get_trending_movies({ time_window: timeWindow });
 
       setIsLoading(false);
-
-      setTrendingMovies(responseDay.data.data);
+      setTrendingMovies(responseDay);
     };
 
     getTrendingMovies();
@@ -42,9 +41,6 @@ const Home = () => {
                   A web application built with React, providing a seamless and secure user registration experience.
                 </p>
               )}
-            </div>
-            <div>
-              <Link to="/movies" className="btn btn-primary">Find Movies</Link>
             </div>
           </div>
         </div>

@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
-import nitflexApiAxios from '@libs/axios/nitflex-api';
+import { handle_login, LoginParams } from '@apis/auth';
 import { useToast } from '@libs/hooks/useToast';
 
 import { useAuth } from '@components/AuthProvider';
@@ -16,13 +16,8 @@ const schema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters').min(1, 'Password is required'),
 });
 
-interface FormData {
-  username: string;
-  password: string;
-}
-
 const Login = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginParams>({
     resolver: zodResolver(schema),
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,11 +25,11 @@ const Login = () => {
   const { setToken } = useAuth();
   const toast = useToast();
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: LoginParams) => {
     if (isSubmitting) return;
     try {
       setIsSubmitting(true);
-      const response = await nitflexApiAxios.post('/login', data);
+      const response = await handle_login(data);
       const result = response.data;
 
       setToken(result.data.access_token);
