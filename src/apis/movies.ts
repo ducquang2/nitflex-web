@@ -1,5 +1,5 @@
 import nitflexApiAxios from '@libs/axios/nitflex-api'
-import { Movie, MovieInfo } from '@libs/utils/types'
+import { Movie, MovieInfo, Pagination, Review } from '@libs/utils/types'
 
 type getMoviesParams = {
   query?: string
@@ -26,18 +26,16 @@ export const get_movies = async (params: getMoviesParams) => {
   if (actors) searchParams.append('actors', actors)
   if (page) searchParams.append('page', page.toString())
 
-  console.log('searchParams', searchParams.toString())
-
   const response = await nitflexApiAxios.get(`/movies?${searchParams.toString()}`)
 
   const responeMovies = response.data.data
 
   return {
-    movies: responeMovies.Results as Movie[],
-    page: responeMovies.Page as number,
-    totalPages: responeMovies.total_pages as number,
-    totalResults: responeMovies.total_results as number,
-  }
+    results: responeMovies.Results,
+    page: responeMovies.Page,
+    totalPages: responeMovies.total_pages,
+    totalResults: responeMovies.total_results,
+  } as Pagination<Movie>
 }
 
 type getMovieParams = {
@@ -66,4 +64,24 @@ export const get_trending_movies = async (params: getTrendingMoviesParams) => {
   const responeMovies = response.data.data as Movie[]
 
   return responeMovies
+}
+
+type getMovieReviewParams = {
+  id: string
+}
+
+export const get_movie_reviews = async (params: getMovieReviewParams) => {
+  const { id } = params
+  if (id) {
+    const response = await nitflexApiAxios.get(`/reviews/${id}`)
+
+    const responeReviews = response.data.data
+
+    return {
+      page: responeReviews.Page,
+      totalPages: responeReviews.total_pages,
+      results: responeReviews.Results,
+      totalResults: responeReviews.total_results,
+    } as Pagination<Review>
+  }
 }
