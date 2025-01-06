@@ -28,20 +28,18 @@ const Home = () => {
   return (
     <div className="min-h-[calc(100dvh-5rem)] container mx-auto p-4">
       <div className="hero bg-base-200">
-        <div className="hero-content text-center">
-          <div className="max-w-md">
-            <h1 className="text-5xl font-bold">
-              NitFlex - Movies/Books recommendation web
-            </h1>
-            <div>
-              {token ? (
-                <p className="py-6">Welcome back, user!</p>
-              ) : (
-                <p className="py-6">
-                  A web application built with React, providing a seamless and secure user registration experience.
-                </p>
-              )}
-            </div>
+        <div className="hero-content text-center flex flex-col">
+          <h1 className="text-5xl font-bold w-fit">
+            NitFlex <br /> Movies recommendation web
+          </h1>
+          <div>
+            {token ? (
+              <p className="pt-6 pb-4">Welcome back, user!</p>
+            ) : (
+              <p className="py-6">
+                A web application built with React, providing a seamless and secure user registration experience.
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -50,7 +48,7 @@ const Home = () => {
         <div className="flex justify-between items-center mb-4">
 
           <h2 className="text-3xl font-bold">
-            {timeWindow === 'day' ? "Today" : "Week"} Trending Movies
+            {timeWindow === 'day' ? "Today" : "This Week"} Trending Movies
           </h2>
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn m-1">Time Window</label>

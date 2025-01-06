@@ -1,14 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { get_watch_list } from '@apis/profile';
 import { useAuth } from '@components/AuthProvider';
 
 const Profile = () => {
   const { token, setToken } = useAuth();
   const [user, setUser] = useState<{ username: string } | null>(null);
+  const [watchList, setWatchList] = useState<Array<any>>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
+
+    const getWatchList = async () => {
+      const watchListResp = await get_watch_list();
+
+      setWatchList(watchListResp.data.results);
+    }
+
     const fetchProfile = async () => {
       try {
 
@@ -20,6 +29,8 @@ const Profile = () => {
       }
     };
     fetchProfile();
+
+    getWatchList();
   }, [token, navigate]);
 
   const handleLogout = () => {
