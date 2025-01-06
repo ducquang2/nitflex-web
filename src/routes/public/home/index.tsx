@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import dayjs from 'dayjs';
+
 import { get_trending_movies } from '@apis/movies';
 import { useAuth } from '@components/AuthProvider';
+import { SHORT_DATE_FORMAT } from '@libs/utils/constants';
 import { Movie } from '@libs/utils/types';
 
 const Home = () => {
@@ -75,7 +78,7 @@ const Home = () => {
                   <figure className="relative">
                     <img src={movie.poster_path} alt={movie.title} className="h-[300px] w-full object-cover" />
                     <div className="absolute bottom-0 left-0 bg-black bg-opacity-50 text-white p-2">
-                      <p className="text-sm">{movie.release_date}</p>
+                      <p className="text-sm">{dayjs(movie.release_date).format(SHORT_DATE_FORMAT)}</p>
                     </div>
                   </figure>
                   <div className="card-body p-4">

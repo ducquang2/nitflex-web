@@ -82,7 +82,7 @@ const MovieDetail = () => {
               <div className="flex gap-1.5 items-center">
                 <span className="icon-star-fill-micro text-yellow-500" />
                 <span className="text-neutral dark:text-neutral-content">
-                  <span className="font-medium">
+                  <span className="font-medium text-primary">
                     {movie.vote_average}
                   </span>
                   <span className="text-neutral-500">

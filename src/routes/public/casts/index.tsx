@@ -85,7 +85,7 @@ const Cast = () => {
               {movies && movies.length > 0 && (
                 <div className="collapse bg-base-200">
                   <input type="checkbox" />
-                  <div className="collapse-title text-xl font-medium">{cast.name} also appear in</div>
+                  <div className="collapse-title text-xl font-medium">Known for</div>
                   <div className="collapse-content space-y-2">
                     {movies?.map((movie) => (
                       <Link to={`/movies/${movie.id}`} key={movie.id} className="flex items-center gap-4">
@@ -96,8 +96,8 @@ const Cast = () => {
                           <p className="text-gray-700">{movie.title}</p>
                           <div className="flex gap-1.5 items-center">
                             <span className="icon-star-fill-micro text-yellow-500" />
-                            <span className="text-neutral dark:text-neutral-content">
-                              <span className="font-medium">
+                            <span className="text-neutral dark:text-primary">
+                              <span className="font-medium text-primary">
                                 {movie.vote_average}
                               </span>
                               <span className="text-neutral-500">
