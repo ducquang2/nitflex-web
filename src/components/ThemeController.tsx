@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 
+import { Theme } from "@libs/utils/types";
+
 const ThemeController = () => {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState<Theme>('lemonade');
   const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
+    setTheme(theme === 'coffee' ? 'lemonade' : 'coffee');
   };
 
   useEffect(() => {

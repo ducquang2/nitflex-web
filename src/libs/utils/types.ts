@@ -1,6 +1,15 @@
 export type Module = {
   path: string
-  main: any
+  main: () => JSX.Element
+}
+
+export type Theme = 'lemonade' | 'coffee'
+
+export type Pagination<T> = {
+  page: number
+  totalPages: number
+  totalResults: number
+  results: T[]
 }
 
 export type Movie = {
@@ -109,4 +118,11 @@ export type CastInfo = {
   also_known_as: Array<string>
   place_of_birth: string
   profile_path: string
+}
+
+export type Review = {
+  ID: string
+  Author: string
+  Content: string
+  URL: string
 }

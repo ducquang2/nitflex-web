@@ -58,9 +58,9 @@ const NavBar = (props: NavBarProps) => {
       setIsLoading(false);
 
       if (!responeMovies) return;
-      if (responeMovies.movies?.length === 0) return;
+      if (responeMovies.results?.length === 0) return;
 
-      setMovies(responeMovies.movies.slice(0, 10));
+      setMovies(responeMovies.results.slice(0, 10));
     };
 
     const debounce = setTimeout(() => getMovies(), 500);
@@ -134,7 +134,6 @@ const NavBar = (props: NavBarProps) => {
         <ul className="menu menu-horizontal px-1 gap-1">
           {token ? (
             <>
-              <li><Link to="/users">Users</Link></li>
               <li><Link to="/profile">Profile</Link></li>
               <li><button onClick={handleLogout}>Logout</button></li>
             </>
