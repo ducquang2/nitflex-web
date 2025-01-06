@@ -4,6 +4,8 @@ import Login from "./public/login";
 import { MovieDetail, MovieGallery } from "./public/movies";
 import Register from "./public/register";
 
+import Profile from "./private/profile";
+
 export default {
   public: [
     Home,
@@ -13,6 +15,8 @@ export default {
     MovieDetail,
     Casts
   ],
-  private: []
+  private: [
+    Profile
+  ]
 };
 
