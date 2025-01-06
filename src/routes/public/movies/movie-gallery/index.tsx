@@ -59,10 +59,10 @@ const Movies = () => {
       setIsLoading(false);
 
       if (!responeMovies) return;
-      if (responeMovies.movies?.length === 0) return;
+      if (responeMovies.results?.length === 0) return;
 
       setMaxPage(responeMovies?.totalPages);
-      setMovies((prev) => [...prev, [...responeMovies.movies]]);
+      setMovies((prev) => [...prev, [...responeMovies.results]]);
     };
 
     const debounce = setTimeout(() => getMovies(), 500);
