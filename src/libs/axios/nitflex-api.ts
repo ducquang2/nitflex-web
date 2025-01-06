@@ -1,15 +1,13 @@
-import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios'
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL
 
 const nitflexApiAxios = axios.create({
   baseURL: API_URL,
-});
+})
 
-const requestAuthInterceptor = async (
-  req: AxiosRequestConfig
-): Promise<InternalAxiosRequestConfig> => {
-  const token = localStorage.getItem("token");
+const requestAuthInterceptor = async (req: AxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
+  const token = localStorage.getItem('token')
   if (token) {
     return {
       ...req,
@@ -17,11 +15,12 @@ const requestAuthInterceptor = async (
         ...req.headers,
         Authorization: `Bearer ${token}`,
       },
-    } as InternalAxiosRequestConfig;
+    } as InternalAxiosRequestConfig
   }
-  return req as InternalAxiosRequestConfig;
-};
 
-nitflexApiAxios.interceptors.request.use(requestAuthInterceptor);
+  return req as InternalAxiosRequestConfig
+}
 
-export default nitflexApiAxios;
+nitflexApiAxios.interceptors.request.use(requestAuthInterceptor)
+
+export default nitflexApiAxios
