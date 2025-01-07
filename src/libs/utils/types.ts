@@ -12,34 +12,14 @@ export type Pagination<T> = {
   results: T[]
 }
 
-export type Movie = {
-  id: number
-  backdrop_path: string
-  title: string
-  original_title: string
-  overview: string
-  poster_path: string
-  media_type: string
-  adult: boolean
-  original_language: string
-  genre_ids: Array<number>
-  popularity: number
-  release_date: string
-  video: boolean
-  vote_average: number
-  vote_count: number
-}
-
 export type Genre = {
   ID: number
   Name: string
 }
 
 export type Collection = {
-  ID: number
-  Name: string
-  poster_path: string
-  backdrop_path: string
+  Key: string
+  Value: string
 }
 
 export type ProductionCompany = {
@@ -59,7 +39,13 @@ export type SpokenLanguage = {
 
 export type MovieInfo = {
   Adult: boolean
+  BackdropPath: string
   Budget: number
+  Categories: string[]
+  Credits: {
+    Id: string
+    Cast: Cast[]
+  }
   Genres: Genre[]
   Homepage: string
   ID: number
@@ -71,53 +57,47 @@ export type MovieInfo = {
   Tagline: string
   Title: string
   Video: boolean
-  backdrop_path: string
-  belongs_to_collection: Collection
-  imdb_id: string
-  original_language: string
-  original_title: string
-  poster_path: string
-  production_companies: ProductionCompany[]
-  production_countries: ProductionCountry[]
-  release_date: string
-  spoken_languages: SpokenLanguage[]
-  vote_average: number
-  vote_count: number
+  BelongsToCollection: Collection
+  ImdbId: string
+  OriginCountry: string[]
+  OriginalLanguage: string
+  OriginalTitle: string
+  PosterPath: string
+  ProductionCompanies: ProductionCompany[]
+  ProductionCountries: ProductionCountry[]
+  ReleaseDate: string
+  SpokenLanguages: SpokenLanguage[]
+  VoteAverage: number
+  VoteCount: number
+  TmdbId: number
 }
 
 export type Cast = {
-  cast_id: number
+  CastId: number
   Character: string
-  credit_id: string
-  ID: number
+  CreditId: string
+  Id: number
   Name: string
   Order: number
-  profile_path: string
-}
-
-export type Crew = {
-  credit_id: string
-  Department: string
-  ID: number
-  Job: string
-  Name: string
-  profile_path: string
+  ProfilePath: string
+  Adult: boolean
+  Gender: number
+  KnownForDepartment: string
+  OriginalName: string
+  Popularity: string
 }
 
 export type CastInfo = {
-  id: number
-  name: string
-  overview: string
-  adult: boolean
-  biography: string
-  birthday: string
-  deathday: string
-  gender: number
-  imdb_id: string
-  homepage: string
-  also_known_as: Array<string>
-  place_of_birth: string
-  profile_path: string
+  Birthday: string
+  DeathDay: string
+  Gender: number
+  Id: string
+  MovieCredit: { CastMovie: any[] }
+  Name: string
+  PlaceOfBirth: string
+  Popularity: number
+  ProfilePath: string
+  TmdbId: string
 }
 
 export type Review = {
