@@ -5,7 +5,7 @@ import classNames from "classnames";
 
 import { get_movies } from "@apis/movies";
 import { addImagePrefix } from "@libs/utils/helpers";
-import { Movie } from "@libs/utils/types";
+import { MovieInfo } from "@libs/utils/types";
 
 import { useAuth } from "./AuthProvider";
 import SearchBar from "./SeachBar";
@@ -28,7 +28,7 @@ const NavBar = (props: NavBarProps) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [canShowDropdown, setCanShowDropdown] = useState(false);
-  const [movies, setMovies] = useState<Array<Movie>>([]);
+  const [movies, setMovies] = useState<Array<MovieInfo>>([]);
   const [query, setQuery] = useState("");
 
   const handleLogout = () => {
@@ -97,16 +97,16 @@ const NavBar = (props: NavBarProps) => {
               ) :
                 <>
                   {movies.map((movie) => (
-                    <li key={movie.id}>
-                      <Link to={`/movies/${movie.id}`}>
+                    <li key={movie.ID}>
+                      <Link to={`/movies/${movie.TmdbId}`}>
                         <div className="flex gap-2 items-center">
                           <img
-                            src={addImagePrefix(movie.poster_path)}
-                            alt={movie.title} className="h-[64px] w-fit object-cover rounded-btn"
+                            src={addImagePrefix(movie.PosterPath)}
+                            alt={movie.Title} className="h-[64px] w-fit object-cover rounded-btn"
                           />
                           <div className="flex flex-col gap-1">
                             <p className="font-medium">
-                              {movie.title}
+                              {movie.Title}
                             </p>
                           </div>
                         </div>

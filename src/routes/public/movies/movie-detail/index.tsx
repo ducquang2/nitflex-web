@@ -3,20 +3,18 @@ import { Link, useParams } from "react-router-dom";
 
 import dayjs from "dayjs";
 
-import { get_casts } from "@apis/casts";
 import { get_movie, get_movie_reviews } from "@apis/movies";
 
 import Detail from "@components/Detail";
 
 import { LONG_DATE_FORMAT } from "@libs/utils/constants";
 import { addImagePrefix } from "@libs/utils/helpers";
-import { Cast, Crew, MovieInfo, Review } from "@libs/utils/types";
+import { MovieInfo, Review } from "@libs/utils/types";
 
 const MovieDetail = () => {
   const { id } = useParams();
 
   const [movie, setMovie] = useState<MovieInfo>()
-  const [casts, setCasts] = useState<{ Id: number, Cast: Array<Cast>, Crew: Array<Crew> }>()
   const [reviews, setReviews] = useState<Array<Review>>()
   const [isLoading, setIsLoading] = useState(false);
 
@@ -32,14 +30,6 @@ const MovieDetail = () => {
       }
     }
 
-    const getCasts = async () => {
-      if (id) {
-        const responeCasts = await get_casts({ movieId: id })
-
-        setCasts(responeCasts.data);
-      }
-    }
-
     const getMovieReviews = async () => {
       if (id) {
         const responeReviews = await get_movie_reviews({ id })
@@ -49,7 +39,6 @@ const MovieDetail = () => {
     }
 
     getMovie()
-    getCasts()
     getMovieReviews()
   }, [id])
 
@@ -72,8 +61,14 @@ const MovieDetail = () => {
         <div className="card w-full glass shadow-xl">
           <h1 className="card-title text-2xl m-3">{movie.Title}</h1>
 
-          <figure>
-            <img src={addImagePrefix(movie.poster_path)} alt="Movie Poster" className="h-[400px] rounded-lg" />
+          <figure className="relative">
+            <img src={addImagePrefix(movie.PosterPath)} alt="Movie Poster" className="h-[400px] rounded-lg" />
+
+            {movie.Adult && (
+              <div className="absolute top-0 right-0 bg-black bg-opacity-50 text-white p-2">
+                <p className="text-sm">18+</p>
+              </div>
+            )}
           </figure>
           <div className="card-body">
             <p className="text-neutral dark:text-neutral-content">{movie.Overview}</p>
@@ -83,13 +78,13 @@ const MovieDetail = () => {
                 <span className="icon-star-fill-micro text-yellow-500" />
                 <span className="text-neutral dark:text-neutral-content">
                   <span className="font-medium text-primary">
-                    {movie.vote_average}
+                    {movie.VoteAverage}
                   </span>
                   <span className="text-neutral-500">
                     / 10
                   </span>
                 </span>
-                <span className="text-neutral-500 text-sm">{movie.vote_count} votes</span>
+                <span className="text-neutral-500 text-sm">{movie.VoteCount} votes</span>
               </div>
 
               <button className="btn btn-warning btn-outline rounded-full min-h-8 h-8 py-0">
@@ -100,18 +95,18 @@ const MovieDetail = () => {
 
             <Detail title="Genres:" titleClassName="min-w-fit">
               <div className="carousel carousel-center w-full rounded-box space-x-4">
-                {movie.Genres.map((genre) => (
-                  <div className="badge badge-neutral-content badge-outline min-w-fit flex-nowrap" key={genre.ID}>{genre.Name}</div>
+                {movie.Genres.map((genre, idx) => (
+                  <div className="badge badge-neutral-content badge-outline min-w-fit flex-nowrap" key={idx}>{genre.Name}</div>
                 ))}
               </div>
             </Detail>
 
             <Detail title="Release Date:">
-              {dayjs(movie.release_date).format(LONG_DATE_FORMAT)}
+              {dayjs(movie.ReleaseDate).format(LONG_DATE_FORMAT)}
             </Detail>
 
             <Detail title="Original Language:">
-              {movie.original_language}
+              {movie.OriginalLanguage}
             </Detail>
 
             <Detail title="Popularity:">
@@ -120,32 +115,33 @@ const MovieDetail = () => {
 
             <Detail title="Production Companies:" titleClassName="min-w-fit">
               <div className="carousel carousel-center rounded-box space-x-2">
-                {movie.production_companies.map((comp) => (
-                  <div className="badge badge-neutral-content badge-outline min-w-fit flex-nowrap" key={comp.ID}>{comp.Name}</div>
+                {movie.ProductionCompanies.map((comp) => (
+                  <div className="badge badge-neutral-content badge-outline min-w-fit flex-nowrap" key={comp.Name}>{comp.Name}</div>
                 ))}
               </div>
             </Detail>
 
-            {casts && casts.Cast.length > 0 && (
+            {movie.Credits.Cast && movie.Credits.Cast.length > 0 && (
               <div className="flex flex-col gap-2">
                 <h3 className="flex gap-3 text-xl font-semibold items-center">
                   Casts
                   <span className="text-neutral-500 text-sm font-normal">
-                    {casts.Cast.length}
+                    {movie.Credits.Cast.length}
                   </span>
                 </h3>
                 <div className="carousel carousel-center w-full shadow-inner rounded-box space-x-4 p-4">
-                  {casts.Cast?.map((cast) => (
-                    <Link to={`/casts/${cast.ID}`} key={cast.ID} className="carousel-item flex flex-col items-center">
+                  {movie.Credits.Cast?.map((cast) => (
+                    <Link to={`/casts/${cast.Id}`} key={cast.CastId} className="carousel-item flex flex-col items-center">
                       <div className="avatar">
                         <div className="w-32 rounded-full md:w-40">
-                          <img src={addImagePrefix(cast.profile_path)} alt={cast.Name} className="rounded-full bg-contain" />
+                          <img src={addImagePrefix(cast.ProfilePath)} alt={cast.Name} className="rounded-full bg-contain" />
                         </div>
                       </div>
                       <p className="text-neutral dark:text-neutral-content font-bold text-sm">{cast.Name}</p>
                       <p className="text-neutral-500 truncate max-w-36 text-xs">{cast.Character}</p>
                     </Link>
-                  ))}
+                  )
+                  )}
                 </div>
               </div>
             )}

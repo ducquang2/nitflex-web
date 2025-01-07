@@ -5,13 +5,15 @@ import dayjs from 'dayjs';
 
 import { get_trending_movies } from '@apis/movies';
 import { useAuth } from '@components/AuthProvider';
+
 import { SHORT_DATE_FORMAT } from '@libs/utils/constants';
-import { Movie } from '@libs/utils/types';
+import { addImagePrefix } from '@libs/utils/helpers';
+import { MovieInfo } from '@libs/utils/types';
 
 const Home = () => {
   const { token } = useAuth();
 
-  const [trendingMovies, setTrendingMovies] = useState<Array<Movie>>([]);
+  const [trendingMovies, setTrendingMovies] = useState<Array<MovieInfo>>([]);
   const [timeWindow, setTimeWindow] = useState<'day' | 'week'>('day');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -73,19 +75,19 @@ const Home = () => {
         ) : (
           <div className="carousel carousel-center w-full bg-neutral rounded-box space-x-4 p-4">
             {trendingMovies?.length && trendingMovies.map((movie) => (
-              <div key={movie.id} className="carousel-item w-1/3 md:w-1/4 rounded-box">
+              <div key={movie.ID} className="carousel-item w-1/3 md:w-1/4 rounded-box">
                 <div className="card w-full bg-base-100 shadow-xl">
                   <figure className="relative">
-                    <img src={movie.poster_path} alt={movie.title} className="h-[300px] w-full object-cover" />
+                    <img src={addImagePrefix(movie.PosterPath)} alt={movie.Title} className="h-[300px] w-full object-cover" />
                     <div className="absolute bottom-0 left-0 bg-black bg-opacity-50 text-white p-2">
-                      <p className="text-sm">{dayjs(movie.release_date).format(SHORT_DATE_FORMAT)}</p>
+                      <p className="text-sm">{dayjs(movie.ReleaseDate).format(SHORT_DATE_FORMAT)}</p>
                     </div>
                   </figure>
                   <div className="card-body p-4">
-                    <h2 className="card-title text-lg font-bold">{movie.title}</h2>
-                    <p className="text-gray-700 text-sm truncate">{movie.overview}</p>
+                    <h2 className="card-title text-lg font-bold">{movie.Title}</h2>
+                    <p className="text-gray-700 text-sm truncate">{movie.Overview}</p>
                     <div className="card-actions justify-end mt-2">
-                      <Link to={`/movies/${movie.id}`} className="btn btn-primary btn-sm">
+                      <Link to={`/movies/${movie.TmdbId}`} className="btn btn-primary btn-sm">
                         View Details
                       </Link>
                     </div>

@@ -1,5 +1,5 @@
 import nitflexApiAxios from '@libs/axios/nitflex-api'
-import { Movie, MovieInfo, Pagination, Review } from '@libs/utils/types'
+import { MovieInfo, Pagination, Review } from '@libs/utils/types'
 
 type getMoviesParams = {
   query?: string
@@ -35,7 +35,7 @@ export const get_movies = async (params: getMoviesParams) => {
     page: responeMovies.Page,
     totalPages: responeMovies.total_pages,
     totalResults: responeMovies.total_results,
-  } as Pagination<Movie>
+  } as Pagination<MovieInfo>
 }
 
 type getMovieParams = {
@@ -61,7 +61,7 @@ export const get_trending_movies = async (params: getTrendingMoviesParams) => {
   const { time_window } = params
   const response = await nitflexApiAxios.get(`/movies/trending?time_window=${time_window}`)
 
-  const responeMovies = response.data.data as Movie[]
+  const responeMovies = response.data.data as MovieInfo[]
 
   return responeMovies
 }
