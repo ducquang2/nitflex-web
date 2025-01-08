@@ -64,6 +64,32 @@ export const get_trending_movies = async (params: getTrendingMoviesParams) => {
   return responeMovies
 }
 
+export const get_popular_movies = async () => {
+  const response = await nitflexApiAxios.get('/movies/popular')
+
+  const responeMovies = response.data.data
+
+  return {
+    results: responeMovies.Results,
+    page: responeMovies.Page || 0,
+    totalPages: responeMovies.total_pages || 0,
+    totalResults: responeMovies.total_results || 0,
+  } as Pagination<MovieInfo>
+}
+
+export const get_upcoming_movies = async () => {
+  const response = await nitflexApiAxios.get('/movies/upcoming')
+
+  const responeMovies = response.data.data
+
+  return {
+    results: responeMovies.Results,
+    page: responeMovies.Page || 0,
+    totalPages: responeMovies.total_pages || 0,
+    totalResults: responeMovies.total_results || 0,
+  } as Pagination<MovieInfo>
+}
+
 type getMovieReviewParams = {
   id: string
 }
