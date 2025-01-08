@@ -8,6 +8,7 @@ export default {
   theme: {
     extend: {},
   },
+  darkMode: ['selector', '[data-theme="coffee"]'],
   plugins: [
     require('daisyui'),
     plugin(function ({ matchComponents, theme }) {
@@ -64,6 +65,6 @@ export default {
     }),
   ],
   daisyui: {
-    themes: ['light', 'dark', 'winter'],
+    themes: ['lemonade', 'coffee'],
   },
 }

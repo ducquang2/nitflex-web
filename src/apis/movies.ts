@@ -1,5 +1,5 @@
 import nitflexApiAxios from '@libs/axios/nitflex-api'
-import { Movie, MovieInfo } from '@libs/utils/types'
+import { MovieInfo, Pagination, Review } from '@libs/utils/types'
 
 type getMoviesParams = {
   query?: string
@@ -26,18 +26,14 @@ export const get_movies = async (params: getMoviesParams) => {
   if (actors) searchParams.append('actors', actors)
   if (page) searchParams.append('page', page.toString())
 
-  console.log('searchParams', searchParams.toString())
-
   const response = await nitflexApiAxios.get(`/movies?${searchParams.toString()}`)
 
-  const responeMovies = response.data.data
-
   return {
-    movies: responeMovies.Results as Movie[],
-    page: responeMovies.Page as number,
-    totalPages: responeMovies.total_pages as number,
-    totalResults: responeMovies.total_results as number,
-  }
+    results: response.data.data,
+    page: response.data.Page || 0,
+    totalPages: response.data.total_pages || 0,
+    totalResults: response.data.total_results || 0,
+  } as Pagination<MovieInfo>
 }
 
 type getMovieParams = {
@@ -63,7 +59,53 @@ export const get_trending_movies = async (params: getTrendingMoviesParams) => {
   const { time_window } = params
   const response = await nitflexApiAxios.get(`/movies/trending?time_window=${time_window}`)
 
-  const responeMovies = response.data.data as Movie[]
+  const responeMovies = response.data.data as MovieInfo[]
 
   return responeMovies
+}
+
+export const get_popular_movies = async () => {
+  const response = await nitflexApiAxios.get('/movies/popular')
+
+  const responeMovies = response.data.data
+
+  return {
+    results: responeMovies.Results,
+    page: responeMovies.Page || 0,
+    totalPages: responeMovies.total_pages || 0,
+    totalResults: responeMovies.total_results || 0,
+  } as Pagination<MovieInfo>
+}
+
+export const get_upcoming_movies = async () => {
+  const response = await nitflexApiAxios.get('/movies/upcoming')
+
+  const responeMovies = response.data.data
+
+  return {
+    results: responeMovies.Results,
+    page: responeMovies.Page || 0,
+    totalPages: responeMovies.total_pages || 0,
+    totalResults: responeMovies.total_results || 0,
+  } as Pagination<MovieInfo>
+}
+
+type getMovieReviewParams = {
+  id: string
+}
+
+export const get_movie_reviews = async (params: getMovieReviewParams) => {
+  const { id } = params
+  if (id) {
+    const response = await nitflexApiAxios.get(`/reviews/${id}`)
+
+    const responeReviews = response.data.data
+
+    return {
+      page: responeReviews.Page,
+      totalPages: responeReviews.total_pages,
+      results: responeReviews.Results,
+      totalResults: responeReviews.total_results,
+    } as Pagination<Review>
+  }
 }

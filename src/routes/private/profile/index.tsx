@@ -1,46 +1,41 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useAuth } from '@components/AuthProvider';
+import { get_watch_list } from '@apis/profile';
+
+import { MovieInfo } from '@libs/utils/types';
 
 const Profile = () => {
-  const { token, setToken } = useAuth();
-  const [user, setUser] = useState<{ username: string } | null>(null);
+  // const [user, setUser] = useState<{ username: string } | null>(null);
+  const [watchList, setWatchList] = useState<MovieInfo[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
+    const getWatchList = async () => {
+      const watchListResp = await get_watch_list();
 
-        // const data = await response.json();
-        // setUser(data);
-      } catch (error) {
-        // console.error(error);
-        // navigate('/login');
-      }
-    };
-    fetchProfile();
-  }, [token, navigate]);
+      console.log(watchListResp);
 
-  const handleLogout = () => {
-    setToken(null);
-    localStorage.removeItem('token');
-    navigate('/login');
-  };
+      setWatchList(watchListResp);
+    }
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
+    getWatchList();
+  }, [navigate]);
 
   return (
-    <div className="h-[calc(100%-5rem)] flex items-center justify-center bg-base-200">
-      <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+    <div className="min-h-[calc(100dvh-5rem)] container mx-auto p-4">
+      <div className="card w-full glass shadow-xl">
+        <h1 className="card-title text-2xl m-3">Profile</h1>
+
         <div className="card-body">
-          <h2 className="card-title">Profile</h2>
-          <p>Email: {user.username}</p>
-          <button onClick={handleLogout} className="btn btn-primary mt-4">
-            Logout
-          </button>
+          <h2 className="text-xl">Watch List</h2>
+          <ul>
+            {watchList?.map((movie) => (
+              <li key={movie.Id}>
+                {movie.Title}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>

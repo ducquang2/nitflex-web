@@ -1,29 +1,20 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
-import SearchBar from '@components/SeachBar';
-import nitflexApiAxios from '@libs/axios/nitflex-api';
-import { Movie } from '@libs/utils/types';
+import { get_movies } from '@apis/movies';
+
+import { MovieInfo } from '@libs/utils/types';
 
 import { MovieList } from '../components/movie-list';
 
 const Movies = () => {
-  const [movies, setMovies] = useState<Array<Array<Movie>>>([]);
+  const location = useLocation();
+
+  const [movies, setMovies] = useState<Array<Array<MovieInfo>>>([]);
   const [query, setQuery] = useState("")
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
-
-  const onSearchSubmit = async (value: string) => {
-    setMovies([]);
-    setPage(1);
-    setQuery(value);
-  };
-
-  const onSearchInputChange = (value: string) => {
-    setMovies([]);
-    setPage(1);
-    setQuery(value);
-  };
 
   const renderContent = () => {
     if (!isLoading && query && movies.length === 0) {
@@ -63,15 +54,14 @@ const Movies = () => {
     const getMovies = async () => {
       if (!query) return;
 
-      const response = await nitflexApiAxios.get(`/movies?query=${query}&page=${page}`);
-
-      const responeMovies = response.data.data
+      const responeMovies = await get_movies({ query, page });
 
       setIsLoading(false);
 
-      if (responeMovies.length === 0) return;
+      if (!responeMovies) return;
+      if (responeMovies.results?.length === 0) return;
 
-      setMaxPage(responeMovies.total_pages);
+      setMaxPage(responeMovies?.totalPages);
       setMovies((prev) => [...prev, [...responeMovies.results]]);
     };
 
@@ -79,17 +69,18 @@ const Movies = () => {
     return () => clearTimeout(debounce);
   }, [query, page]);
 
+  useEffect(() => {
+    if (location.search && location.search.includes('query')) {
+      const query = new URLSearchParams(location.search).get('query');
+      setQuery(query || '');
+    }
+  }, [location])
+
   return (
     <div className="h-full bg-base-200 overflow-hidden p-4">
-      <h1>Movies List</h1>
       <div className="flex flex-col gap-4">
-        <SearchBar
-          value={query}
-          onSubmit={onSearchSubmit}
-          onChange={onSearchInputChange}
-        />
         <div
-          className="max-h-[calc(100vh-12rem)] flex flex-col gap-4 overflow-y-auto"
+          className="max-h-[calc(100vh-6rem)] flex flex-col gap-4 overflow-y-auto"
           onScroll={handleScroll}
         >
           {renderContent()}

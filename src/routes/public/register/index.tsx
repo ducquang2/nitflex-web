@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
-import nitflexApiAxios from '@libs/axios/nitflex-api';
+import { handle_register, RegisterParams } from '@apis/auth';
 import { useToast } from '@libs/hooks/useToast';
 
 import GoogleLogin from '@components/GoogleLogin';
@@ -16,25 +16,19 @@ const schema = z.object({
   password: z.string().min(8, 'Password must be at least 6 characters').min(1, 'Password is required'),
 }).required();
 
-interface FormData {
-  email: string;
-  username: string;
-  password: string;
-}
-
 const Register = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, formState: { errors } } = useForm<RegisterParams>({
     resolver: zodResolver(schema),
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: RegisterParams) => {
     if (isSubmitting) return;
     try {
       setIsSubmitting(true);
-      const response = await nitflexApiAxios.post('/register', data);
+      const response = await handle_register(data);
       if (response.status === 200)
         toast.success('Signup successful!', {
           autoClose: 2000,
@@ -118,7 +112,7 @@ const Register = () => {
             <GoogleLogin
               isLoading={isSubmitting}
               title="Register with Google"
-              onSubmit={() => setIsSubmitting(true)}
+              onSubmit={(value) => setIsSubmitting(value)}
             />
 
             <div className="divider">OR</div>

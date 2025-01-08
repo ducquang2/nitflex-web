@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
 
+import { Theme } from "@libs/utils/types";
+
 const ThemeController = () => {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState<Theme>(localStorage.getItem('theme') as Theme || 'lemonade');
   const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
+    setTheme(theme === 'coffee' ? 'lemonade' : 'coffee');
   };
 
   useEffect(() => {
     const html = document.querySelector('html')
     if (html) {
       html.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
     }
   }, [theme]);
 
