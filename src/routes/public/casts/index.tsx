@@ -78,7 +78,7 @@ const Cast = () => {
                   <div className="collapse-content space-y-2">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {cast.MovieCredit.CastMovie?.map((movie) => (
-                        <Link to={`/movies/${movie.TmdbId}`} key={movie.Id} className="flex items-center gap-4 border border-primary rounded-es-lg">
+                        <Link to={`/movies/${movie.Id}`} key={movie.Id} className="flex items-center gap-4 border border-primary rounded-es-lg">
                           <div className="w-14 rounded-full md:w-16">
                             <img src={addImagePrefix(movie.PosterPath)} alt={movie.Title} className="rounded-es-lg bg-contain min-w-14 md:min-w-16 md:min-h-24" />
                           </div>

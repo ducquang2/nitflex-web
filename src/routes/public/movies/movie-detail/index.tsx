@@ -7,12 +7,16 @@ import { get_movie, get_movie_reviews } from "@apis/movies";
 
 import Detail from "@components/Detail";
 
+import { add_to_watch_list } from "@apis/profile";
+import { useToast } from "@libs/hooks/useToast";
 import { LONG_DATE_FORMAT } from "@libs/utils/constants";
 import { addImagePrefix } from "@libs/utils/helpers";
 import { MovieInfo, Review } from "@libs/utils/types";
 
 const MovieDetail = () => {
   const { id } = useParams();
+
+  const toast = useToast();
 
   const [movie, setMovie] = useState<MovieInfo>()
   const [reviews, setReviews] = useState<Array<Review>>()
@@ -41,6 +45,21 @@ const MovieDetail = () => {
     getMovie()
     getMovieReviews()
   }, [id])
+
+  const handleAddToWatchList = async (movie_id: number) => {
+    try {
+      const response = await add_to_watch_list({ movie_id: movie_id.toString() })
+
+      if (response) {
+        toast.success('Added to Watchlist');
+      }
+
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to add to Watchlist');
+    }
+
+  }
 
   if (isLoading) {
     return (
@@ -148,7 +167,11 @@ const MovieDetail = () => {
 
             <div className="card-actions">
               <div className="flex gap-2">
-                <button className="btn btn-warning rounded-xl">Add to Watchlist</button>
+                <button
+                  className="btn btn-warning rounded-xl"
+                  onClick={() => handleAddToWatchList(movie.TmdbId)}>
+                  Add to Watchlist
+                </button>
               </div>
             </div>
 
@@ -159,6 +182,13 @@ const MovieDetail = () => {
                   <div key={review.ID} className="chat chat-start">
                     <div className="chat-header">
                       {review.Author}
+                    </div>
+                    <div className="chat-image avatar">
+                      <div className="avatar placeholder">
+                        <div className="bg-neutral text-neutral-content w-10 rounded-full">
+                          <span className="text-3xl">{review.Author.slice(0, 1)}</span>
+                        </div>
+                      </div>
                     </div>
                     <div className="chat-bubble">
                       <p className="break-words overflow-hidden  line-clamp-3">
