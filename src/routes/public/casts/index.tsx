@@ -4,31 +4,21 @@ import { Link, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 
 import { get_cast } from "@apis/casts";
-import { get_movies } from "@apis/movies";
 
 import Detail from "@components/Detail";
 
-import { LONG_DATE_FORMAT } from "@libs/utils/constants";
+import { LONG_DATE_FORMAT, YEAR_FORMAT } from "@libs/utils/constants";
 import { addImagePrefix, parseGender } from "@libs/utils/helpers";
-import { CastInfo, MovieInfo } from "@libs/utils/types";
+import { CastInfo } from "@libs/utils/types";
 
 const Cast = () => {
   const { id } = useParams();
 
   const [isLoading, setIsLoading] = useState(false);
   const [cast, setCast] = useState<CastInfo>()
-  const [movies, setMovies] = useState<Array<MovieInfo>>()
 
   useEffect(() => {
     setIsLoading(true);
-
-    const getMovies = async () => {
-      if (id) {
-        const responeMovies = await get_movies({ actors: id });
-
-        setMovies(responeMovies?.results);
-      }
-    }
 
     const getCast = async () => {
       if (id) {
@@ -40,7 +30,6 @@ const Cast = () => {
     }
 
     getCast()
-    getMovies()
   }, [id])
 
   if (isLoading) {
@@ -81,34 +70,33 @@ const Cast = () => {
               {cast.PlaceOfBirth}
             </Detail>
 
-            {movies && movies.length > 0 && (
+            {cast.MovieCredit.CastMovie && cast.MovieCredit.CastMovie.length > 0 && (
               <div className="flex flex-col gap-2">
                 <div className="collapse bg-base-200">
                   <input type="checkbox" />
                   <div className="collapse-title text-xl font-medium">Known for</div>
                   <div className="collapse-content space-y-2">
-                    {movies?.map((movie) => (
-                      <Link to={`/movies/${movie.TmdbId}`} key={movie.Id} className="flex items-center gap-4">
-                        <div className="w-16 rounded-full md:w-24">
-                          <img src={addImagePrefix(movie.PosterPath)} alt={movie.Title} className="rounded-lg bg-contain" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          <p className="text-gray-700">{movie.Title}</p>
-                          <div className="flex gap-1.5 items-center">
-                            <span className="icon-star-fill-micro text-yellow-500" />
-                            <span className="text-neutral dark:text-primary">
-                              <span className="font-medium text-primary">
-                                {movie.VoteAverage}
-                              </span>
-                              <span className="text-neutral-500">
-                                / 10
-                              </span>
-                            </span>
-                            <span className="text-neutral-500 text-sm">{movie.VoteCount} votes</span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {cast.MovieCredit.CastMovie?.map((movie) => (
+                        <Link to={`/movies/${movie.TmdbId}`} key={movie.Id} className="flex items-center gap-4 border border-primary rounded-es-lg">
+                          <div className="w-16 rounded-full md:w-24">
+                            <img src={addImagePrefix(movie.PosterPath)} alt={movie.Title} className="rounded-es-lg bg-contain min-w-16 md:min-w-24" />
                           </div>
-                        </div>
-                      </Link>
-                    ))}
+                          <div className="flex flex-col gap-2">
+                            <p className="text-neutral dark:text-neutral-content">{movie.Title}</p>
+                            <div className="flex gap-1.5 items-center">
+                              <span className="icon-star-fill-micro text-yellow-500" />
+                              <span className="text-neutral dark:text-primary">
+                                <span className="font-medium text-primary">
+                                  {movie.VoteAverage}
+                                </span>
+                              </span>
+                            </div>
+                            <div className="text-neutral dark:text-neutral-content text-xs">{dayjs(movie.ReleaseDate).format(YEAR_FORMAT)}</div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
