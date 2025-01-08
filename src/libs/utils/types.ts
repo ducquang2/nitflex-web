@@ -92,7 +92,7 @@ export type CastInfo = {
   DeathDay: string
   Gender: number
   Id: string
-  MovieCredit: { CastMovie: any[] }
+  MovieCredit: { CastMovie: MovieInfo[] }
   Name: string
   PlaceOfBirth: string
   Popularity: number
