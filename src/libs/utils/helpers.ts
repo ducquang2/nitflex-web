@@ -42,7 +42,7 @@ export function splitToSmallChunks(array: Array<MovieInfo>, n: number) {
  * @returns - The image path with the prefix.
  */
 export function addImagePrefix(image?: string) {
-  if (!image) {
+  if (!image || image === 'https://image.tmdb.org/t/p/w500') {
     return 'https://dummyimage.com/600x1400/000/fff.png&text=no_image'
   }
 
@@ -53,12 +53,6 @@ export function addImagePrefix(image?: string) {
   return `https://image.tmdb.org/t/p/w500${image}`
 }
 
-/**
- * @description Parse
- *
- * @param
- * @returns
- */
 /**
  * Parses a numeric gender representation into a string.
  *
