@@ -88,6 +88,7 @@ export type Cast = {
 }
 
 export type CastInfo = {
+  Biography: string
   Birthday: string
   DeathDay: string
   Gender: number

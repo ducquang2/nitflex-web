@@ -56,7 +56,7 @@ const Cast = () => {
           </figure>
 
           <div className="card-body">
-            {/* <p className="text-neutral dark:text-neutral-content line-clamp-5">{cast.biography}</p> */}
+            <p className="text-neutral dark:text-neutral-content line-clamp-5">{cast.Biography}</p>
 
             <Detail title="Gender:">
               {parseGender(cast.Gender)}
