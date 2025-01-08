@@ -94,7 +94,7 @@ const Login = () => {
               {isSubmitting ? <span className="loading loading-spinner" /> : 'Sign In'}
             </button>
 
-            <GoogleLogin isLoading={isSubmitting} onSubmit={() => setIsSubmitting(true)} />
+            <GoogleLogin isLoading={isSubmitting} onSubmit={(value) => setIsSubmitting(value)} />
 
             <div className="divider">OR</div>
             <div className="text-center">

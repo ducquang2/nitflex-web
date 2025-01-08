@@ -112,7 +112,7 @@ const Register = () => {
             <GoogleLogin
               isLoading={isSubmitting}
               title="Register with Google"
-              onSubmit={() => setIsSubmitting(true)}
+              onSubmit={(value) => setIsSubmitting(value)}
             />
 
             <div className="divider">OR</div>

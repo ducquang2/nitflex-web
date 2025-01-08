@@ -11,7 +11,7 @@ import { useAuth } from "./AuthProvider";
 type GoogleLoginProps = {
   title?: string;
   isLoading?: boolean;
-  onSubmit?: () => void;
+  onSubmit?: (isSuccess: boolean) => void;
 }
 
 const GoogleLogin = (props: GoogleLoginProps) => {
@@ -22,18 +22,24 @@ const GoogleLogin = (props: GoogleLoginProps) => {
 
   const onGoogleLogin = useGoogleLogin({
     onSuccess: async ({ access_token }) => {
-      if (onSubmit) onSubmit();
-      const response = await nitflexApiAxios.post('/login/google', { access_token })
-      const result = response.data;
+      try {
+        const response = await nitflexApiAxios.post('/login/google', { access_token })
+        const result = response.data;
 
-      setToken(result.data.access_token);
-      localStorage.setItem('token', result.data.access_token);
-      if (result.data.access_token)
-        toast.success('Login successful!', {
-          onClose: () => {
-            navigate('/');
-          },
-        });
+        setToken(result.data.access_token);
+        localStorage.setItem('token', result.data.access_token);
+        if (onSubmit) onSubmit(true);
+        if (result.data.access_token)
+          toast.success('Login successful!', {
+            onClose: () => {
+              navigate('/');
+            },
+          });
+      } catch (error) {
+        console.error(error);
+        toast.error('Login failed!');
+        if (onSubmit) onSubmit(false);
+      }
     },
     onError: (error) => {
       console.error(error);
