@@ -7,7 +7,7 @@ import { get_movie, get_movie_reviews } from "@apis/movies";
 
 import Detail from "@components/Detail";
 
-import { add_to_watch_list } from "@apis/profile";
+import { add_rating, add_to_watch_list } from "@apis/profile";
 import { useToast } from "@libs/hooks/useToast";
 import { LONG_DATE_FORMAT } from "@libs/utils/constants";
 import { addImagePrefix } from "@libs/utils/helpers";
@@ -21,6 +21,7 @@ const MovieDetail = () => {
   const [movie, setMovie] = useState<MovieInfo>()
   const [reviews, setReviews] = useState<Array<Review>>()
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedRating, setSelectedRating] = useState<number>(0);
 
   useEffect(() => {
     setIsLoading(true)
@@ -46,9 +47,11 @@ const MovieDetail = () => {
     getMovieReviews()
   }, [id])
 
-  const handleAddToWatchList = async (movie_id: number) => {
+  const handleAddToWatchList = async () => {
+    if (!movie) return;
+
     try {
-      const response = await add_to_watch_list({ movie_id: movie_id.toString() })
+      const response = await add_to_watch_list({ movie_id: movie.TmdbId.toString() })
 
       if (response) {
         toast.success('Added to Watchlist');
@@ -58,7 +61,29 @@ const MovieDetail = () => {
       console.error(error);
       toast.error('Failed to add to Watchlist');
     }
+  }
 
+  const handleRating = async () => {
+    if (!movie) return;
+
+    try {
+      const response = await add_rating({ movie_id: movie.TmdbId.toString(), rating: selectedRating });
+
+      if (response) {
+        toast.success('Rated Successfully!');
+      }
+
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to rate the movie');
+    }
+  }
+
+  const showRatingModal = () => {
+    if (document) {
+      // @ts-expect-error - TS doesn't know that dialog is a valid element
+      document.getElementById('rating_modal')?.showModal()
+    }
   }
 
   if (isLoading) {
@@ -106,7 +131,10 @@ const MovieDetail = () => {
                 <span className="text-neutral-500 text-sm">{movie.VoteCount} votes</span>
               </div>
 
-              <button className="btn btn-warning btn-outline rounded-full min-h-8 h-8 py-0">
+              <button
+                className="btn btn-warning btn-outline rounded-full min-h-8 h-8 py-0"
+                onClick={showRatingModal}
+              >
                 <span className="icon-star-micro" />
                 Rate
               </button>
@@ -169,7 +197,7 @@ const MovieDetail = () => {
               <div className="flex gap-2">
                 <button
                   className="btn btn-warning rounded-xl"
-                  onClick={() => handleAddToWatchList(movie.TmdbId)}>
+                  onClick={handleAddToWatchList}>
                   Add to Watchlist
                 </button>
               </div>
@@ -209,9 +237,32 @@ const MovieDetail = () => {
         </div>
       ) : (
         <h2>Movie not Found</h2>
-      )
-      }
-    </div >
+      )}
+
+      <dialog id="rating_modal" className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg text-primary">Rate the movie!</h3>
+          <div className="rating mt-2">
+            {[...Array(10)].map((_, index) => (
+              <input
+                key={index}
+                type="radio"
+                name="rating-1"
+                className="mask mask-star"
+                checked={selectedRating === index + 1}
+                onChange={() => setSelectedRating(index + 1)}
+              />
+            ))}
+          </div>
+          <div className="modal-action">
+            <button className="btn" onClick={handleRating}>Submit</button>
+            <form method="dialog">
+              <button className="btn">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+    </div>
   );
 };
 

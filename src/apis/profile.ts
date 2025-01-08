@@ -1,10 +1,10 @@
 import nitflexApiAxios from '@libs/axios/nitflex-api'
+import { MovieInfo } from '@libs/utils/types'
 
 export const get_watch_list = async () => {
   const response = await nitflexApiAxios.get('/watchlist/')
-  console.log(response)
 
-  return response.data
+  return response.data.data.Results as MovieInfo[]
 }
 
 export const get_user_ratings = async () => {
