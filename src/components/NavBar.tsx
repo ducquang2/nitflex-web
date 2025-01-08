@@ -97,7 +97,7 @@ const NavBar = (props: NavBarProps) => {
               ) :
                 <>
                   {movies.map((movie) => (
-                    <li key={movie.ID}>
+                    <li key={movie.Id}>
                       <Link to={`/movies/${movie.TmdbId}`}>
                         <div className="flex gap-2 items-center">
                           <img

@@ -48,7 +48,7 @@ export type MovieInfo = {
   }
   Genres: Genre[]
   Homepage: string
-  ID: number
+  Id: number
   Overview: string
   Popularity: number
   Revenue: number

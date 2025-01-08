@@ -75,7 +75,7 @@ const Home = () => {
         ) : (
           <div className="carousel carousel-center w-full bg-neutral rounded-box space-x-4 p-4">
             {trendingMovies?.length && trendingMovies.map((movie) => (
-              <div key={movie.ID} className="carousel-item w-1/3 md:w-1/4 rounded-box">
+              <div key={movie.Id} className="carousel-item w-1/3 md:w-1/4 rounded-box">
                 <div className="card w-full bg-base-100 shadow-xl">
                   <figure className="relative">
                     <img src={addImagePrefix(movie.PosterPath)} alt={movie.Title} className="h-[300px] w-full object-cover" />

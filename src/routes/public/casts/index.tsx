@@ -88,7 +88,7 @@ const Cast = () => {
                   <div className="collapse-title text-xl font-medium">Known for</div>
                   <div className="collapse-content space-y-2">
                     {movies?.map((movie) => (
-                      <Link to={`/movies/${movie.TmdbId}`} key={movie.ID} className="flex items-center gap-4">
+                      <Link to={`/movies/${movie.TmdbId}`} key={movie.Id} className="flex items-center gap-4">
                         <div className="w-16 rounded-full md:w-24">
                           <img src={addImagePrefix(movie.PosterPath)} alt={movie.Title} className="rounded-lg bg-contain" />
                         </div>

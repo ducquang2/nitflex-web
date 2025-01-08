@@ -3,14 +3,14 @@ import { useLocation } from 'react-router-dom';
 
 import { get_movies } from '@apis/movies';
 
-import { Movie } from '@libs/utils/types';
+import { MovieInfo } from '@libs/utils/types';
 
 import { MovieList } from '../components/movie-list';
 
 const Movies = () => {
   const location = useLocation();
 
-  const [movies, setMovies] = useState<Array<Array<Movie>>>([]);
+  const [movies, setMovies] = useState<Array<Array<MovieInfo>>>([]);
   const [query, setQuery] = useState("")
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);

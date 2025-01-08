@@ -28,13 +28,11 @@ export const get_movies = async (params: getMoviesParams) => {
 
   const response = await nitflexApiAxios.get(`/movies?${searchParams.toString()}`)
 
-  const responeMovies = response.data.data
-
   return {
-    results: responeMovies.Results,
-    page: responeMovies.Page,
-    totalPages: responeMovies.total_pages,
-    totalResults: responeMovies.total_results,
+    results: response.data.data,
+    page: response.data.Page || 0,
+    totalPages: response.data.total_pages || 0,
+    totalResults: response.data.total_results || 0,
   } as Pagination<MovieInfo>
 }
 
