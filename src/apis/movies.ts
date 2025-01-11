@@ -104,3 +104,16 @@ export const get_movie_reviews = async (params: getMovieReviewParams) => {
     return responeReviews as Review[]
   }
 }
+
+type addReviewParams = {
+  movie_id: string
+  content: string
+}
+
+export const add_review = async (params: addReviewParams) => {
+  const { movie_id, content } = params
+
+  const response = await nitflexApiAxios.post(`/reviews/`, { movie_id, content })
+
+  return response.data
+}

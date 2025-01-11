@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 
 import dayjs from "dayjs";
 
-import { get_movie, get_movie_reviews } from "@apis/movies";
+import { get_movie, get_movie_reviews, add_review } from "@apis/movies";
 
 import Detail from "@components/Detail";
 
@@ -22,6 +22,7 @@ const MovieDetail = () => {
   const [reviews, setReviews] = useState<Array<Review>>()
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRating, setSelectedRating] = useState<number>(0);
+  const [reviewContent, setReviewContent] = useState("");
 
   useEffect(() => {
     setIsLoading(true)
@@ -98,6 +99,30 @@ const MovieDetail = () => {
       toast.error('Failed to add to Favorites');
     }
   }
+
+  const handleAddReview = async () => {
+    if (!movie || !reviewContent.trim()) return;
+
+    try {
+      const response = await add_review({ 
+        movie_id: movie.Id.toString(), 
+        content: reviewContent 
+      });
+
+      if (response) {
+        toast.success('Review added successfully!');
+        setReviewContent("");
+        
+        if (movie.Id) {
+          const updatedReviews = await get_movie_reviews({ id: movie.Id.toString() });
+          setReviews(updatedReviews);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to add review');
+    }
+  };
 
   const showRatingModal = () => {
     if (document) {
@@ -230,6 +255,30 @@ const MovieDetail = () => {
 
             <div>
               <h2 className="text-xl font-semibold mt-2">Reviews</h2>
+              
+              <div className="mt-4 mb-6">
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Add your review</span>
+                  </label>
+                  <div className="flex gap-2">
+                    <textarea 
+                      className="textarea textarea-bordered flex-1" 
+                      placeholder="Write your review here..."
+                      value={reviewContent}
+                      onChange={(e) => setReviewContent(e.target.value)}
+                    />
+                    <button 
+                      className="btn btn-primary" 
+                      onClick={handleAddReview}
+                      disabled={!reviewContent.trim()}
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </div>
+
               <div className="flex flex-col gap-4">
                 {reviews?.map((review) => (
                   <div key={review.Id} className="chat chat-start">
