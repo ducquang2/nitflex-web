@@ -7,7 +7,7 @@ import { get_movie, get_movie_reviews } from "@apis/movies";
 
 import Detail from "@components/Detail";
 
-import { add_rating, add_to_watch_list } from "@apis/profile";
+import { add_rating, add_to_watch_list, add_favorite } from "@apis/profile";
 import { useToast } from "@libs/hooks/useToast";
 import { LONG_DATE_FORMAT } from "@libs/utils/constants";
 import { addImagePrefix } from "@libs/utils/helpers";
@@ -80,6 +80,22 @@ const MovieDetail = () => {
     } catch (error) {
       console.error(error);
       toast.error('Failed to rate the movie');
+    }
+  }
+
+  const handleAddToFavorite = async () => {
+    if (!movie) return;
+
+    try {
+      const response = await add_favorite({ movie_id: movie.TmdbId.toString() });
+
+      if (response) {
+        toast.success('Added to Favorites');
+      }
+
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to add to Favorites');
     }
   }
 
@@ -203,6 +219,11 @@ const MovieDetail = () => {
                   className="btn btn-warning rounded-xl"
                   onClick={handleAddToWatchList}>
                   Add to Watchlist
+                </button>
+                <button
+                  className="btn btn-error rounded-xl"
+                  onClick={handleAddToFavorite}>
+                  Add to Favorite
                 </button>
               </div>
             </div>

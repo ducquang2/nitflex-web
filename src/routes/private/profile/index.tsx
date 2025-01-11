@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { get_watch_list } from '@apis/profile';
+import { get_watch_list, get_favorite_movies } from '@apis/profile';
 
 import { MovieInfo } from '@libs/utils/types';
 
 const Profile = () => {
   // const [user, setUser] = useState<{ username: string } | null>(null);
   const [watchList, setWatchList] = useState<MovieInfo[]>([]);
+  const [favoriteList, setFavoriteList] = useState<MovieInfo[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,7 +20,13 @@ const Profile = () => {
       setWatchList(watchListResp);
     }
 
+    const getFavoriteList = async () => {
+      const favoriteListResp = await get_favorite_movies();
+      setFavoriteList(favoriteListResp.data.Results);
+    }
+
     getWatchList();
+    getFavoriteList();
   }, [navigate]);
 
   return (
@@ -28,14 +35,29 @@ const Profile = () => {
         <h1 className="card-title text-2xl m-3">Profile</h1>
 
         <div className="card-body">
-          <h2 className="text-xl">Watch List</h2>
-          <ul>
-            {watchList?.map((movie) => (
-              <li key={movie.Id}>
-                {movie.Title}
-              </li>
-            ))}
-          </ul>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h2 className="text-xl mb-2">Watch List</h2>
+              <ul className="space-y-2">
+                {watchList?.map((movie) => (
+                  <li key={movie.Id} className="hover:bg-base-300 p-2 rounded-lg cursor-pointer">
+                    {movie.Title}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <div>
+              <h2 className="text-xl mb-2">Favorite Movies</h2>
+              <ul className="space-y-2">
+                {favoriteList?.map((movie) => (
+                  <li key={movie.Id} className="hover:bg-base-300 p-2 rounded-lg cursor-pointer">
+                    {movie.Title}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
