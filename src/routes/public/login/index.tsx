@@ -13,7 +13,7 @@ import GoogleLogin from '@components/GoogleLogin';
 
 const schema = z.object({
   username: z.string().min(1, 'Username is required'),
-  password: z.string().min(8, 'Password must be at least 8 characters').min(1, 'Password is required'),
+  password: z.string().min(6, 'Password must be at least 6 characters').min(1, 'Password is required'),
 });
 
 const Login = () => {
@@ -31,10 +31,10 @@ const Login = () => {
       setIsSubmitting(true);
       const response = await handle_login(data);
       const result = response.data;
-
-      setToken(result.data.access_token);
-      localStorage.setItem('token', result.data.access_token);
-      if (result.data.access_token)
+      
+      setToken(result.data.AccessToken);
+      localStorage.setItem('token', result.data.AccessToken);
+      if (result.data.AccessToken)
         toast.success('Login successful!', {
           onClose: () => {
             navigate('/');
