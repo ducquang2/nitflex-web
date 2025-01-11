@@ -102,7 +102,7 @@ export type CastInfo = {
 }
 
 export type Review = {
-  ID: string
+  Id: string
   Author: string
   Content: string
   URL: string

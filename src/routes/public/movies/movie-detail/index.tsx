@@ -35,17 +35,21 @@ const MovieDetail = () => {
       }
     }
 
-    const getMovieReviews = async () => {
-      if (id) {
-        const responeReviews = await get_movie_reviews({ id })
+    getMovie()
+  }, [id])
 
-        setReviews(responeReviews?.results);
+  useEffect(() => {
+    const getMovieReviews = async () => {
+      if (movie?.Id) {
+        const responeReviews = await get_movie_reviews({ id: movie.Id.toString() })
+
+        setReviews(responeReviews);
       }
+
     }
 
-    getMovie()
     getMovieReviews()
-  }, [id])
+  }, [movie])
 
   const handleAddToWatchList = async () => {
     if (!movie) return;
@@ -207,7 +211,7 @@ const MovieDetail = () => {
               <h2 className="text-xl font-semibold mt-2">Reviews</h2>
               <div className="flex flex-col gap-4">
                 {reviews?.map((review) => (
-                  <div key={review.ID} className="chat chat-start">
+                  <div key={review.Id} className="chat chat-start">
                     <div className="chat-header">
                       {review.Author}
                     </div>

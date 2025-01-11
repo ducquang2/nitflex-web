@@ -101,11 +101,6 @@ export const get_movie_reviews = async (params: getMovieReviewParams) => {
 
     const responeReviews = response.data.data
 
-    return {
-      page: responeReviews.Page,
-      totalPages: responeReviews.total_pages,
-      results: responeReviews.Results,
-      totalResults: responeReviews.total_results,
-    } as Pagination<Review>
+    return responeReviews as Review[]
   }
 }
