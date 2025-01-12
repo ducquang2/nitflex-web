@@ -3,11 +3,12 @@ import { Link, useParams } from "react-router-dom";
 
 import dayjs from "dayjs";
 
-import { add_review, get_movie, get_movie_reviews } from "@apis/movies";
+import { add_review, get_llm_movies, get_movie, get_movie_reviews } from "@apis/movies";
 
 import Detail from "@components/Detail";
 
 import { add_favorite, add_rating, add_to_watch_list } from "@apis/profile";
+import MoviesSection from "@components/MoviesSection";
 import { useToast } from "@libs/hooks/useToast";
 import { LONG_DATE_FORMAT } from "@libs/utils/constants";
 import { addImagePrefix } from "@libs/utils/helpers";
@@ -23,6 +24,8 @@ const MovieDetail = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRating, setSelectedRating] = useState<number>(0);
   const [reviewContent, setReviewContent] = useState("");
+  const [isGettingRelatedMovies, setIsGettingRelatedMovies] = useState(false);
+  const [relatedMovies, setRelatedMovies] = useState<MovieInfo[]>([]);
 
   useEffect(() => {
     setIsLoading(true)
@@ -46,9 +49,20 @@ const MovieDetail = () => {
 
         setReviews(responeReviews);
       }
-
     }
 
+    const getRelatedMovies = async () => {
+      setIsGettingRelatedMovies(true);
+
+      if (movie?.Title) {
+        const response = await get_llm_movies({ query: movie?.Title });
+
+        setIsGettingRelatedMovies(false);
+        setRelatedMovies(response.results);
+      }
+    }
+
+    getRelatedMovies()
     getMovieReviews()
   }, [movie])
 
@@ -254,6 +268,13 @@ const MovieDetail = () => {
                 </button>
               </div>
             </div>
+
+            <MoviesSection
+              title="Related Movies"
+              isLoading={isGettingRelatedMovies}
+              movies={relatedMovies}
+              titleClassName="text-xl font-semibold mt-2"
+            />
 
             <div>
               <h2 className="text-xl font-semibold mt-2">Reviews</h2>

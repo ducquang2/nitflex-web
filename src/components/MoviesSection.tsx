@@ -5,24 +5,25 @@ import dayjs from "dayjs";
 import { SHORT_DATE_FORMAT } from "@libs/utils/constants";
 import { addImagePrefix } from "@libs/utils/helpers";
 import { MovieInfo } from "@libs/utils/types";
+import classNames from "classnames";
 
 type MoviesSectionProps = {
   title: string;
+  titleClassName?: string;
   movies: MovieInfo[];
   isLoading: boolean;
   rightHeader?: () => JSX.Element
 }
 
 const MoviesSection = (props: MoviesSectionProps) => {
-  const { title, movies, isLoading, rightHeader } = props
+  const { title, titleClassName, movies, isLoading, rightHeader } = props
 
   return (
     <div className="space-y-2">
       <div className="flex justify-between items-center mb-2">
-        <h2 className="text-3xl font-bold">{title}</h2>
+        <h2 className={classNames("text-3xl font-bold", titleClassName)}>{title}</h2>
 
         {rightHeader && rightHeader()}
-        {/* <Link to="/movies" className="btn btn-primary">View All</Link> */}
       </div>
       {isLoading ? (
         <div className="h-64 flex justify-center items-center">
