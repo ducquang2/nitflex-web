@@ -62,48 +62,64 @@ const Profile = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <h2 className="text-xl mb-2">Watch List</h2>
-              <ul className="space-y-2">
-                {watchList?.map((movie) => (
-                  <li key={movie.Id} className="card card-side bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-300 relative group">
-                    <figure>
-                      <img src={addImagePrefix(movie.PosterPath)} alt={movie.Title} className="min-h-24 min-w-16 object-cover rounded-l-lg" />
-                    </figure>
-                    <div className="card-body p-4">
-                      <h3 className="card-title">{movie.Title}</h3>
-                      <p className="line-clamp-2">{movie.Overview}</p>
-                      <button
-                        className="btn btn-error btn-sm absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        onClick={() => handleRemoveFromWatchList(movie.Id)}
-                      >
-                        <i className="icon-trash-fill-micro" />
-                      </button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+              {watchList.length === 0 ? (
+                <div className="alert alert-warning">
+                  <div>
+                    <span>Your watch list is empty.</span>
+                  </div>
+                </div>
+              ) : (
+                <ul className="space-y-2">
+                  {watchList.map((movie) => (
+                    <li key={movie.Id} className="card card-side bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-300 relative group">
+                      <figure>
+                        <img src={addImagePrefix(movie.PosterPath)} alt={movie.Title} className="min-h-24 min-w-16 object-cover rounded-l-lg" />
+                      </figure>
+                      <div className="card-body p-4">
+                        <h3 className="card-title">{movie.Title}</h3>
+                        <p className="line-clamp-2">{movie.Overview}</p>
+                        <button
+                          className="btn btn-error btn-sm absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          onClick={() => handleRemoveFromWatchList(movie.Id)}
+                        >
+                          <i className="icon-trash-fill-micro" />
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             <div>
               <h2 className="text-xl mb-2">Favorite Movies</h2>
-              <ul className="space-y-2">
-                {favoriteList?.map((movie) => (
-                  <li key={movie.Id} className="card card-side bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-300 relative group">
-                    <figure>
-                      <img src={addImagePrefix(movie.PosterPath)} alt={movie.Title} className="min-h-24 min-w-16 object-cover rounded-l-lg" />
-                    </figure>
-                    <div className="card-body p-4">
-                      <h3 className="card-title">{movie.Title}</h3>
-                      <p className="line-clamp-2">{movie.Overview}</p>
-                      <button
-                        className="btn btn-error btn-sm absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        onClick={() => handleRemoveFromFavoriteList(movie.Id)}
-                      >
-                        <i className="icon-trash-fill-micro" />
-                      </button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+              {favoriteList.length === 0 ? (
+                <div className="alert alert-warning">
+                  <div>
+                    <span>Your favorite movies list is empty.</span>
+                  </div>
+                </div>
+              ) : (
+                <ul className="space-y-2">
+                  {favoriteList.map((movie) => (
+                    <li key={movie.Id} className="card card-side bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-300 relative group">
+                      <figure>
+                        <img src={addImagePrefix(movie.PosterPath)} alt={movie.Title} className="min-h-24 min-w-16 object-cover rounded-l-lg" />
+                      </figure>
+                      <div className="card-body p-4">
+                        <h3 className="card-title">{movie.Title}</h3>
+                        <p className="line-clamp-2">{movie.Overview}</p>
+                        <button
+                          className="btn btn-error btn-sm absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          onClick={() => handleRemoveFromFavoriteList(movie.Id)}
+                        >
+                          <i className="icon-trash-fill-micro" />
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         </div>

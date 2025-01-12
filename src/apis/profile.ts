@@ -73,11 +73,6 @@ export const remove_favorite = async (params: addFavoriteParams) => {
 }
 
 export const get_user_profile = async () => {
-  try {
-    const response = await nitflexApiAxios.get('/me')
-    return response.data.data as User
-  } catch (error) {
-    console.error('Error fetching user profile:', error)
-    return null
-  }
+  const response = await nitflexApiAxios.get('/me')
+  return response.data.data as User
 }

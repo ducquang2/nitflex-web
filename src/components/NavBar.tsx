@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import classNames from "classnames";
 
 import { get_llm_movies, get_movies } from "@apis/movies";
+import { get_user_profile } from "@apis/profile";
 import { addImagePrefix } from "@libs/utils/helpers";
 import { MovieInfo } from "@libs/utils/types";
 
@@ -30,10 +31,13 @@ const NavBar = (props: NavBarProps) => {
   const [movies, setMovies] = useState<Array<MovieInfo>>([]);
   const [query, setQuery] = useState("");
   const [isLLMSearch, setIsLLMSearch] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogout = () => {
+    setShowLogoutModal(false);
     setToken(null);
     localStorage.removeItem('token');
+    navigate('/login');
   };
 
   const handleSearchInputChange = (value: string) => {
@@ -45,6 +49,21 @@ const NavBar = (props: NavBarProps) => {
     setCanShowDropdown(false);
     navigate(`/movies?query=${value}`);
   };
+
+  useEffect(() => {
+    const checkUserProfile = async () => {
+      try {
+        await get_user_profile();
+      } catch (error) {
+        // @ts-expect-error - This is a hack to check if the token is valid
+        if (error?.response?.data?.message === 'invalid token') {
+          setShowLogoutModal(true);
+        }
+      }
+    };
+
+    checkUserProfile();
+  }, [navigate]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -157,6 +176,22 @@ const NavBar = (props: NavBarProps) => {
           )}
         </ul>
       </div>
+
+      {showLogoutModal && (
+        <div className="modal modal-open">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">Session Expired</h3>
+            <p className="py-4">Your session has expired. Please log in again.</p>
+            <div className="modal-action">
+              <button
+                className="btn btn-primary"
+                onClick={handleLogout}>
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
