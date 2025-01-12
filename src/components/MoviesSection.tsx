@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 
+import classNames from "classnames";
 import dayjs from "dayjs";
 
 import { SHORT_DATE_FORMAT } from "@libs/utils/constants";
 import { addImagePrefix } from "@libs/utils/helpers";
 import { MovieInfo } from "@libs/utils/types";
-import classNames from "classnames";
 
 type MoviesSectionProps = {
   title: string;
