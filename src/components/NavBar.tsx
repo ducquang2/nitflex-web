@@ -91,9 +91,9 @@ const NavBar = (props: NavBarProps) => {
         </Link>
       </div>
       {showSearchBar && (
-        <div className="flex-1 justify-center items-center">
-          <div className="flex flex-1 justify-center items-center dropdown dropdown-bottom">
-            <SearchBar className="w-4/5" value={query} onChange={handleSearchInputChange} onSubmit={handleSearchSubmit} />
+        <div className="flex flex-1 gap-4 justify-center items-center">
+          <div className="w-3/5 dropdown dropdown-bottom">
+            <SearchBar className="w-full" value={query} onChange={handleSearchInputChange} onSubmit={handleSearchSubmit} />
 
             {query && canShowDropdown && (
               <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-4/5 p-2 mt-2 shadow">
@@ -135,7 +135,7 @@ const NavBar = (props: NavBarProps) => {
               </ul>
             )}
           </div>
-          <label className="label cursor-pointer ml-2">
+          <label className="label cursor-pointer">
             <span className="label-text mr-2 w-12">{isLLMSearch ? "LLM" : "Simple"}</span>
             <input type="checkbox" className="toggle toggle-primary" checked={isLLMSearch} onChange={() => setIsLLMSearch(!isLLMSearch)} />
           </label>
