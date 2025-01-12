@@ -107,3 +107,13 @@ export type Review = {
   Content: string
   URL: string
 }
+
+export type User = {
+  CreatedAt: string
+  Email: string
+  FavoriteList: number[]
+  Id: string
+  UpdatedAt: string
+  Username: string
+  Watchlist: number[]
+}

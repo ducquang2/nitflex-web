@@ -1,5 +1,5 @@
 import nitflexApiAxios from '@libs/axios/nitflex-api'
-import { MovieInfo } from '@libs/utils/types'
+import { MovieInfo, User } from '@libs/utils/types'
 
 export const get_watch_list = async () => {
   const response = await nitflexApiAxios.get('/watchlist/')
@@ -70,4 +70,14 @@ export const remove_favorite = async (params: addFavoriteParams) => {
   const response = await nitflexApiAxios.delete('/favorite/', { data: { movie_id } })
 
   return response.data
+}
+
+export const get_user_profile = async () => {
+  try {
+    const response = await nitflexApiAxios.get('/me')
+    return response.data.data as User
+  } catch (error) {
+    console.error('Error fetching user profile:', error)
+    return null
+  }
 }
