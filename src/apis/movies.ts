@@ -1,5 +1,6 @@
 import nitflexApiAxios from '@libs/axios/nitflex-api'
 import { MovieInfo, Pagination, Review } from '@libs/utils/types'
+import axios from 'axios'
 
 type getMoviesParams = {
   query?: string
@@ -11,6 +12,8 @@ type getMoviesParams = {
   release_date_lte?: string
   actors?: string
 }
+
+const GEMINI = import.meta.env.VITE_GEMINI
 
 export const get_movies = async (params: getMoviesParams) => {
   const { query, page, genres, min_rating, max_rating, release_date_gte, release_date_lte, actors } = params
@@ -116,4 +119,32 @@ export const add_review = async (params: addReviewParams) => {
   const response = await nitflexApiAxios.post(`/reviews/`, { movie_id, content })
 
   return response.data
+}
+
+export const get_llm_movies = async (params: getMoviesParams) => {
+  const { query } = params
+
+  try {
+    const movieIdsResponse = await axios.get('https://awd-llm.azurewebsites.net/retriever/', {
+      params: { llm_api_key: GEMINI, collection_name: 'movies', query, amount: 6 },
+    })
+
+    const movieIds = movieIdsResponse.data.data.result
+
+    if (!movieIds || movieIds.length === 0) {
+      return { results: [], page: 0, totalPages: 0, totalResults: 0 }
+    }
+
+    const moviesResponse = await nitflexApiAxios.get(`/movies/list?ids=${movieIds.join(',')}`)
+
+    return {
+      results: moviesResponse.data.data,
+      page: moviesResponse.data.Page || 0,
+      totalPages: moviesResponse.data.total_pages || 0,
+      totalResults: moviesResponse.data.total_results || 0,
+    } as Pagination<MovieInfo>
+  } catch (error) {
+    console.error('Error fetching LLM movies:', error)
+    return { results: [], page: 0, totalPages: 0, totalResults: 0 }
+  }
 }

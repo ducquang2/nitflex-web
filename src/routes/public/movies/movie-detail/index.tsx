@@ -3,11 +3,11 @@ import { Link, useParams } from "react-router-dom";
 
 import dayjs from "dayjs";
 
-import { get_movie, get_movie_reviews, add_review } from "@apis/movies";
+import { add_review, get_movie, get_movie_reviews } from "@apis/movies";
 
 import Detail from "@components/Detail";
 
-import { add_rating, add_to_watch_list, add_favorite } from "@apis/profile";
+import { add_favorite, add_rating, add_to_watch_list } from "@apis/profile";
 import { useToast } from "@libs/hooks/useToast";
 import { LONG_DATE_FORMAT } from "@libs/utils/constants";
 import { addImagePrefix } from "@libs/utils/helpers";
@@ -104,15 +104,15 @@ const MovieDetail = () => {
     if (!movie || !reviewContent.trim()) return;
 
     try {
-      const response = await add_review({ 
-        movie_id: movie.Id.toString(), 
-        content: reviewContent 
+      const response = await add_review({
+        movie_id: movie.Id.toString(),
+        content: reviewContent
       });
 
       if (response) {
         toast.success('Review added successfully!');
         setReviewContent("");
-        
+
         if (movie.Id) {
           const updatedReviews = await get_movie_reviews({ id: movie.Id.toString() });
           setReviews(updatedReviews);
@@ -243,11 +243,13 @@ const MovieDetail = () => {
                 <button
                   className="btn btn-warning rounded-xl"
                   onClick={handleAddToWatchList}>
+                  <i className="icon-circle-plus-micro" />
                   Add to Watchlist
                 </button>
                 <button
                   className="btn btn-error rounded-xl"
                   onClick={handleAddToFavorite}>
+                  <i className="icon-heart-micro" />
                   Add to Favorite
                 </button>
               </div>
@@ -255,21 +257,21 @@ const MovieDetail = () => {
 
             <div>
               <h2 className="text-xl font-semibold mt-2">Reviews</h2>
-              
+
               <div className="mt-4 mb-6">
                 <div className="form-control">
                   <label className="label">
                     <span className="label-text">Add your review</span>
                   </label>
                   <div className="flex gap-2">
-                    <textarea 
-                      className="textarea textarea-bordered flex-1" 
+                    <textarea
+                      className="textarea textarea-bordered flex-1"
                       placeholder="Write your review here..."
                       value={reviewContent}
                       onChange={(e) => setReviewContent(e.target.value)}
                     />
-                    <button 
-                      className="btn btn-primary" 
+                    <button
+                      className="btn btn-primary"
                       onClick={handleAddReview}
                       disabled={!reviewContent.trim()}
                     >
