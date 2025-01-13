@@ -124,3 +124,10 @@ export type Rating = {
   Rating: number
   Movie: MovieInfo
 }
+
+export type Trailer = {
+  Id: string
+  Link: string
+  Title: string
+  Description: string
+}

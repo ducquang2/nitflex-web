@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 
 import dayjs from "dayjs";
 
-import { add_review, get_llm_movies, get_movie, get_movie_reviews, get_trailers } from "@apis/movies";
+import { add_review, get_llm_movies, get_movie, get_movie_reviews, get_trailer } from "@apis/movies";
 
 import Detail from "@components/Detail";
 
@@ -39,7 +39,7 @@ const MovieDetail = () => {
         setMovie(responeMovie);
 
         if (responeMovie?.TmdbId) {
-          const trailerResponse = await get_trailers({ id: responeMovie?.TmdbId.toString() });
+          const trailerResponse = await get_trailer({ id: responeMovie?.TmdbId.toString() });
           if (trailerResponse.length > 0) {
             setTrailerUrl(parseYoutubeLink(trailerResponse[0].key));
           }

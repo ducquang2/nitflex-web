@@ -2,13 +2,12 @@ import { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { Link } from 'react-router-dom';
 
-import { MovieInfo } from '@libs/utils/types';
+import { MovieInfo, Trailer } from '@libs/utils/types';
 
 import { get_popular_movies, get_trailers, get_trending_movies } from '@apis/movies';
 
 import { useAuth } from '@components/AuthProvider';
 import MoviesSection from '@components/MoviesSection';
-import { parseYoutubeLink } from '@libs/utils/helpers';
 
 const Home = () => {
   const { token } = useAuth();
@@ -16,22 +15,13 @@ const Home = () => {
   const [trendingMovies, setTrendingMovies] = useState<Array<MovieInfo>>([]);
   // const [upcomingMovies, setUpcomingMovies] = useState<Array<MovieInfo>>([]);
   const [popularMovies, setPopularMovies] = useState<Array<MovieInfo>>([]);
-  const [trailerUrls, setTrailerUrls] = useState<{ [key: number]: string }>({});
+  const [trailers, setTrailers] = useState<Array<Trailer>>([]);
 
   const [isGettingTrendingMovies, setIsGettingTrendingMovies] = useState(false);
   // const [isGettingUpcomingMovies, setIsGettingUpcomingMovies] = useState(false);
   const [isGettingPopularMovies, setIsGettingPopularMovies] = useState(false);
 
   const [timeWindow, setTimeWindow] = useState<'day' | 'week'>('day');
-
-  const fetchMovieTrailer = async (movieId: number) => {
-    if (movieId) {
-      const trailerResponse = await get_trailers({ id: movieId.toString() });
-      if (trailerResponse.length > 0) {
-        setTrailerUrls((prev) => ({ ...prev, [movieId]: parseYoutubeLink(trailerResponse[0].key) || '' }));
-      }
-    }
-  }
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -40,17 +30,19 @@ const Home = () => {
       setIsGettingPopularMovies(true);
 
       try {
-        const [trendingResponse, popularResponse] = await Promise.all([
+        const [trendingResponse, popularResponse, trailersResponse] = await Promise.all([
           get_trending_movies({ time_window: timeWindow }),
           // get_upcoming_movies(),
-          get_popular_movies()
+          get_popular_movies(),
+          get_trailers(),
         ]);
 
         setTrendingMovies(trendingResponse);
         // setUpcomingMovies(upcomingResponse.results);
         setPopularMovies(popularResponse);
+        setTrailers(trailersResponse);
 
-        popularResponse.forEach(movie => fetchMovieTrailer(movie.TmdbId));
+        // popularResponse.forEach(movie => fetchMovieTrailer(movie.TmdbId));
       } catch (error) {
         console.error('Failed to fetch movies:', error);
       } finally {
@@ -112,20 +104,15 @@ const Home = () => {
           </div>
 
           <div className="carousel carousel-center w-full bg-neutral space-x-4 py-4 px-6">
-            {popularMovies?.length && popularMovies.map((movie) => (
-              <div key={movie.Id} className="carousel-item w-1/2 md:w-1/3">
+            {trailers && trailers.map((trailer) => (
+              <div key={trailer.Id} className="carousel-item w-1/2 md:w-1/3">
                 <div className="card w-full bg-transparent shadow-xl">
                   <figure className="relative w-full rounded-react-player">
-                    <ReactPlayer url={trailerUrls[movie.TmdbId] || ''} width="100%" height="300px" />
+                    <ReactPlayer url={trailer.Link} width="100%" height="300px" />
                   </figure>
                   <div className="card-body p-4">
-                    <h2 className="text-neutral-content text-center w-full text-lg font-bold">{movie.Title}</h2>
-                    <p className="text-neutral-content text-sm truncate">{movie.Overview}</p>
-                    <div className="card-actions justify-center mt-2">
-                      <Link to={`/movies/${movie.TmdbId}`} className="btn btn-primary btn-sm btn-outline">
-                        View Details
-                      </Link>
-                    </div>
+                    <h2 className="text-neutral-content text-center w-full text-lg font-bold">{trailer.Title}</h2>
+                    <p className="text-neutral-content text-sm text-center truncate">{trailer.Description}</p>
                   </div>
                 </div>
               </div>
