@@ -45,3 +45,8 @@ export const reset_password = async (params: resetPasswordParams) => {
 
   return response.data
 }
+
+export const active_account = async (token: string) => {
+  const response = await nitflexApiAxios.get(`/activate?token=${token}`)
+  return response.data
+}
