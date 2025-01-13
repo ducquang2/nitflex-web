@@ -5,6 +5,7 @@ import { MovieDetail, MovieGallery } from "./public/movies";
 import Register from "./public/register";
 
 import Profile from "./private/profile";
+import ResetPassword from "./public/reset-password";
 
 export default {
   public: [
@@ -13,7 +14,8 @@ export default {
     Register,
     MovieGallery,
     MovieDetail,
-    Casts
+    Casts,
+    ResetPassword
   ],
   private: [
     Profile

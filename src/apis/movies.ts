@@ -78,10 +78,10 @@ export const get_popular_movies = async () => {
 export const get_upcoming_movies = async () => {
   const response = await nitflexApiAxios.get('/movies/upcoming')
 
-  const responeMovies = response.data.data
+  const responeMovies = response.data
 
   return {
-    results: responeMovies.Results,
+    results: responeMovies.data,
     page: responeMovies.Page || 0,
     totalPages: responeMovies.total_pages || 0,
     totalResults: responeMovies.total_results || 0,
@@ -153,6 +153,7 @@ export const get_genres = async () => {
 type getTrailersParams = {
   id: string
 }
+
 export const get_trailers = async (params: getTrailersParams) => {
   const { id } = params
   const response = await axios.get(`https://api.themoviedb.org/3/movie/${id}/videos`, {
