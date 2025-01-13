@@ -31,7 +31,7 @@ const Login = () => {
       setIsSubmitting(true);
       const response = await handle_login(data);
       const result = response.data;
-      
+
       setToken(result.data.AccessToken);
       localStorage.setItem('token', result.data.AccessToken);
       if (result.data.AccessToken)
@@ -97,9 +97,12 @@ const Login = () => {
             <GoogleLogin isLoading={isSubmitting} onSubmit={(value) => setIsSubmitting(value)} />
 
             <div className="divider">OR</div>
-            <div className="text-center">
+            <div className="flex flex-col gap-2 text-center">
               <Link to="/register" className="link link-primary">
                 Don't have an account? Sign up
+              </Link>
+              <Link to="/reset-password" className="link link-primary"              >
+                Forgot Password?
               </Link>
             </div>
           </div>
