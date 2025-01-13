@@ -70,14 +70,9 @@ export const get_trending_movies = async (params: getTrendingMoviesParams) => {
 export const get_popular_movies = async () => {
   const response = await nitflexApiAxios.get('/movies/popular')
 
-  const responeMovies = response.data.data
+  const responeMovies = response.data.data as MovieInfo[]
 
-  return {
-    results: responeMovies.Results,
-    page: responeMovies.Page || 0,
-    totalPages: responeMovies.total_pages || 0,
-    totalResults: responeMovies.total_results || 0,
-  } as Pagination<MovieInfo>
+  return responeMovies
 }
 
 export const get_upcoming_movies = async () => {

@@ -45,7 +45,7 @@ const Home = () => {
       const responsePopular = await get_popular_movies();
 
       setIsGettingPopularMovies(false);
-      setPopularMovies(responsePopular.results);
+      setPopularMovies(responsePopular);
     }
 
     getTrendingMovies();
