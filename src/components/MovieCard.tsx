@@ -1,5 +1,7 @@
-import { MovieInfo } from '@libs/utils/types';
+import { Link } from 'react-router-dom';
+
 import { addImagePrefix } from '@libs/utils/helpers';
+import { MovieInfo } from '@libs/utils/types';
 
 interface MovieCardProps {
   movie: MovieInfo;
@@ -9,14 +11,14 @@ interface MovieCardProps {
 
 const MovieCard = ({ movie, rating, onRemove }: MovieCardProps) => {
   return (
-    <a 
-      href={`/movies/${movie.Id}`}
+    <Link
+      to={`/movies/${movie.Id}`}
       className="block card card-side bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-300 relative group"
     >
       <figure>
-        <img 
-          src={addImagePrefix(movie.PosterPath)} 
-          alt={movie.Title} 
+        <img
+          src={addImagePrefix(movie.PosterPath)}
+          alt={movie.Title}
           className="h-32 w-24 object-cover rounded-l-lg"
         />
       </figure>
@@ -42,7 +44,7 @@ const MovieCard = ({ movie, rating, onRemove }: MovieCardProps) => {
           </button>
         )}
       </div>
-    </a>
+    </Link>
   );
 };
 
