@@ -117,3 +117,15 @@ export type User = {
   Username: string
   Watchlist: number[]
 }
+
+export type Rating = {
+  UserId: string
+  MovieId: string
+  Rating: number
+  Movie: {
+    ID: number
+    Title: string
+    Overview: string
+    PosterPath: string
+  }
+}

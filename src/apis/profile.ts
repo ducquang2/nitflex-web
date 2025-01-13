@@ -10,7 +10,7 @@ export const get_watch_list = async () => {
 export const get_user_ratings = async () => {
   const response = await nitflexApiAxios.get('/ratings/')
 
-  return response.data
+  return response.data.data.Results
 }
 
 export const get_favorite_movies = async () => {
