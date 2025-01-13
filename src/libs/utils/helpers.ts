@@ -69,3 +69,17 @@ export function parseGender(gender?: number) {
 
   return gender === 2 ? 'Male' : 'Female'
 }
+
+/**
+ * Parses a string into a YouTube link.
+ *
+ * @param key - The YouTube key.
+ * @returns The YouTube link if the key is provided, otherwise `undefined`.
+ */
+export function parseYoutubeLink(key?: string): string | undefined {
+  if (!key) {
+    return undefined
+  }
+
+  return `https://www.youtube.com/watch?v=${key}`
+}

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import ReactPlayer from "react-player";
 import { Link, useParams } from "react-router-dom";
 
 import dayjs from "dayjs";
 
-import { add_review, get_llm_movies, get_movie, get_movie_reviews } from "@apis/movies";
+import { add_review, get_llm_movies, get_movie, get_movie_reviews, get_trailers } from "@apis/movies";
 
 import Detail from "@components/Detail";
 
@@ -11,7 +12,7 @@ import { add_favorite, add_rating, add_to_watch_list } from "@apis/profile";
 import MoviesSection from "@components/MoviesSection";
 import { useToast } from "@libs/hooks/useToast";
 import { LONG_DATE_FORMAT } from "@libs/utils/constants";
-import { addImagePrefix } from "@libs/utils/helpers";
+import { addImagePrefix, parseYoutubeLink } from "@libs/utils/helpers";
 import { MovieInfo, Review } from "@libs/utils/types";
 
 const MovieDetail = () => {
@@ -26,21 +27,28 @@ const MovieDetail = () => {
   const [reviewContent, setReviewContent] = useState("");
   const [isGettingRelatedMovies, setIsGettingRelatedMovies] = useState(false);
   const [relatedMovies, setRelatedMovies] = useState<MovieInfo[]>([]);
+  const [trailerUrl, setTrailerUrl] = useState<string>();
 
   useEffect(() => {
-    setIsLoading(true)
+    setIsLoading(true);
 
     const getMovie = async () => {
       if (id) {
-        const responeMovie = await get_movie({ id })
-
+        const responeMovie = await get_movie({ id });
         setIsLoading(false);
         setMovie(responeMovie);
-      }
-    }
 
-    getMovie()
-  }, [id])
+        if (responeMovie?.TmdbId) {
+          const trailerResponse = await get_trailers({ id: responeMovie?.TmdbId.toString() });
+          if (trailerResponse.length > 0) {
+            setTrailerUrl(parseYoutubeLink(trailerResponse[0].key));
+          }
+        }
+      }
+    };
+
+    getMovie();
+  }, [id]);
 
   useEffect(() => {
     const getMovieReviews = async () => {
@@ -164,12 +172,21 @@ const MovieDetail = () => {
         <div className="card w-full glass shadow-xl">
           <h1 className="card-title text-2xl m-3">{movie.Title}</h1>
 
-          <figure className="relative">
+          <figure className="relative flex gap-3">
             <img src={addImagePrefix(movie.PosterPath)} alt="Movie Poster" className="h-[400px] rounded-lg" />
-
             {movie.Adult && (
               <div className="absolute top-0 right-0 bg-black bg-opacity-50 text-white p-2">
                 <p className="text-sm">18+</p>
+              </div>
+            )}
+            {trailerUrl && (
+              <div className="flex w-1/2 rounded-react-player">
+                <ReactPlayer
+                  url={trailerUrl}
+                  width="100%"
+                  height="400px"
+                  controls
+                />
               </div>
             )}
           </figure>

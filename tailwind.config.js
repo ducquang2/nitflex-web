@@ -2,6 +2,8 @@ import { readdirSync, readFileSync } from 'fs'
 import { basename, join } from 'path'
 import plugin from 'tailwindcss/plugin'
 
+import ReactPlayer from './src/libs/tailwind/react-player.ts'
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
@@ -63,6 +65,7 @@ export default {
         { values },
       )
     }),
+    plugin(ReactPlayer),
   ],
   daisyui: {
     themes: ['lemonade', 'coffee'],
