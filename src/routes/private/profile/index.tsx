@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import MovieCard from '@components/MovieCard';
 
-import { get_favorite_movies, get_user_profile, get_watch_list, remove_favorite, remove_from_watch_list } from '@apis/profile';
+import { get_favorite_movies, get_user_profile, get_watch_list, get_user_ratings, remove_favorite, remove_from_watch_list } from '@apis/profile';
 
-import { addImagePrefix } from '@libs/utils/helpers';
-import { MovieInfo, User } from '@libs/utils/types';
+import { MovieInfo, Rating, User } from '@libs/utils/types';
 
 const Profile = () => {
   const [user, setUser] = useState<User | null>(null);
   const [watchList, setWatchList] = useState<MovieInfo[]>([]);
   const [favoriteList, setFavoriteList] = useState<MovieInfo[]>([]);
+  const [ratings, setRatings] = useState<Rating[]>([]);
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<'ratings' | 'watchlist' | 'favorites'>('ratings');
 
   useEffect(() => {
     const getWatchList = async () => {
@@ -28,9 +30,16 @@ const Profile = () => {
       setUser(userResp);
     }
 
+    const getRatings = async () => {
+      const ratingsResp = await get_user_ratings();
+      setRatings(ratingsResp);
+      console.log(ratingsResp);
+    }
+
     getUserProfile();
     getWatchList();
     getFavoriteList();
+    getRatings();
   }, [navigate]);
 
   const handleRemoveFromWatchList = async (movieId: number) => {
@@ -41,6 +50,91 @@ const Profile = () => {
   const handleRemoveFromFavoriteList = async (movieId: number) => {
     await remove_favorite({ movie_id: movieId.toString() });
     setFavoriteList(favoriteList.filter(movie => movie.Id !== movieId));
+  };
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'ratings':
+        return (
+          <div className="card bg-base-100 shadow-xl">
+            <div className="card-body">
+              <h2 className="text-xl mb-2">My Ratings</h2>
+              {ratings?.length === 0 ? (
+                <div className="alert alert-warning">
+                  <div>
+                    <span>You haven't rated any movies yet.</span>
+                  </div>
+                </div>
+              ) : (
+                <ul className="space-y-2">
+                  {ratings?.map((rating) => (
+                    <li key={rating.MovieId}>
+                      <MovieCard 
+                        movie={rating.Movie} 
+                        rating={rating.Rating}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        );
+      
+      case 'watchlist':
+        return (
+          <div className="card bg-base-100 shadow-xl">
+            <div className="card-body">
+              <h2 className="text-xl mb-2">Watch List</h2>
+              {watchList?.length === 0 ? (
+                <div className="alert alert-warning">
+                  <div>
+                    <span>Your watch list is empty.</span>
+                  </div>
+                </div>
+              ) : (
+                <ul className="space-y-2">
+                  {watchList?.map((movie) => (
+                    <li key={movie.Id}>
+                      <MovieCard 
+                        movie={movie}
+                        onRemove={() => handleRemoveFromWatchList(movie.Id)}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        );
+
+      case 'favorites':
+        return (
+          <div className="card bg-base-100 shadow-xl">
+            <div className="card-body">
+              <h2 className="text-xl mb-2">Favorite Movies</h2>
+              {favoriteList?.length === 0 ? (
+                <div className="alert alert-warning">
+                  <div>
+                    <span>Your favorite movies list is empty.</span>
+                  </div>
+                </div>
+              ) : (
+                <ul className="space-y-2">
+                  {favoriteList?.map((movie) => (
+                    <li key={movie.Id}>
+                      <MovieCard 
+                        movie={movie}
+                        onRemove={() => handleRemoveFromFavoriteList(movie.Id)}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        );
+    }
   };
 
   return (
@@ -59,69 +153,28 @@ const Profile = () => {
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <h2 className="text-xl mb-2">Watch List</h2>
-              {watchList.length === 0 ? (
-                <div className="alert alert-warning">
-                  <div>
-                    <span>Your watch list is empty.</span>
-                  </div>
-                </div>
-              ) : (
-                <ul className="space-y-2">
-                  {watchList.map((movie) => (
-                    <li key={movie.Id} className="card card-side bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-300 relative group">
-                      <figure>
-                        <img src={addImagePrefix(movie.PosterPath)} alt={movie.Title} className="min-h-24 min-w-16 object-cover rounded-l-lg" />
-                      </figure>
-                      <div className="card-body p-4">
-                        <h3 className="card-title">{movie.Title}</h3>
-                        <p className="line-clamp-2">{movie.Overview}</p>
-                        <button
-                          className="btn btn-error btn-sm absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                          onClick={() => handleRemoveFromWatchList(movie.Id)}
-                        >
-                          <i className="icon-trash-fill-micro" />
-                        </button>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
-            <div>
-              <h2 className="text-xl mb-2">Favorite Movies</h2>
-              {favoriteList.length === 0 ? (
-                <div className="alert alert-warning">
-                  <div>
-                    <span>Your favorite movies list is empty.</span>
-                  </div>
-                </div>
-              ) : (
-                <ul className="space-y-2">
-                  {favoriteList.map((movie) => (
-                    <li key={movie.Id} className="card card-side bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-300 relative group">
-                      <figure>
-                        <img src={addImagePrefix(movie.PosterPath)} alt={movie.Title} className="min-h-24 min-w-16 object-cover rounded-l-lg" />
-                      </figure>
-                      <div className="card-body p-4">
-                        <h3 className="card-title">{movie.Title}</h3>
-                        <p className="line-clamp-2">{movie.Overview}</p>
-                        <button
-                          className="btn btn-error btn-sm absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                          onClick={() => handleRemoveFromFavoriteList(movie.Id)}
-                        >
-                          <i className="icon-trash-fill-micro" />
-                        </button>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+          <div className="tabs tabs-boxed mb-4">
+            <button 
+              className={`tab ${activeTab === 'ratings' ? 'tab-active' : ''}`}
+              onClick={() => setActiveTab('ratings')}
+            >
+              Ratings
+            </button>
+            <button 
+              className={`tab ${activeTab === 'watchlist' ? 'tab-active' : ''}`}
+              onClick={() => setActiveTab('watchlist')}
+            >
+              Watch List
+            </button>
+            <button 
+              className={`tab ${activeTab === 'favorites' ? 'tab-active' : ''}`}
+              onClick={() => setActiveTab('favorites')}
+            >
+              Favorites
+            </button>
           </div>
+
+          {renderContent()}
         </div>
       </div>
     </div>
