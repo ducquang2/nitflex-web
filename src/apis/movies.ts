@@ -1,5 +1,5 @@
 import nitflexApiAxios from '@libs/axios/nitflex-api'
-import { MovieInfo, Pagination, Review } from '@libs/utils/types'
+import { Genre, MovieInfo, Pagination, Review } from '@libs/utils/types'
 import axios from 'axios'
 
 type getMoviesParams = {
@@ -147,4 +147,22 @@ export const get_llm_movies = async (params: getMoviesParams) => {
     console.error('Error fetching LLM movies:', error)
     return { results: [], page: 0, totalPages: 0, totalResults: 0 }
   }
+}
+
+export const get_genres = async () => {
+  const response = await nitflexApiAxios.get('/genres')
+
+  return response.data.data as Genre[]
+}
+
+type getTrailersParams = {
+  id: string
+}
+export const get_trailers = async (params: getTrailersParams) => {
+  const { id } = params
+  const response = await axios.get(`https://api.themoviedb.org/3/movie/${id}/videos`, {
+    headers: { Authorization: 'Bearer ' + import.meta.env.VITE_TMDB_ACCESS_TOKEN },
+  })
+
+  return response.data.results
 }

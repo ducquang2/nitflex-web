@@ -13,7 +13,7 @@ export type Pagination<T> = {
 }
 
 export type Genre = {
-  ID: number
+  Id: number
   Name: string
 }
 

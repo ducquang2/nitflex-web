@@ -11,7 +11,8 @@ const Movies = () => {
   const location = useLocation();
 
   const [movies, setMovies] = useState<Array<Array<MovieInfo>>>([]);
-  const [query, setQuery] = useState("")
+  const [query, setQuery] = useState<string>()
+  const [genres, setGenres] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
@@ -21,16 +22,6 @@ const Movies = () => {
       return (
         <div className="flex justify-center items-center">
           <p className="text-2xl text-gray-400 ">No results found</p>
-        </div>
-      );
-    }
-
-    if (!query) {
-      return (
-        <div className="flex justify-center items-center">
-          <p className="text-2xl text-gray-400 ">
-            Please input to search for movies
-          </p>
         </div>
       );
     }
@@ -52,9 +43,9 @@ const Movies = () => {
     setIsLoading(true);
 
     const getMovies = async () => {
-      if (!query) return;
+      if (!query && !genres) return;
 
-      const responeMovies = await get_movies({ query, page });
+      const responeMovies = await get_movies({ query, page, genres: Number(genres) });
 
       setIsLoading(false);
 
@@ -67,12 +58,14 @@ const Movies = () => {
 
     const debounce = setTimeout(() => getMovies(), 500);
     return () => clearTimeout(debounce);
-  }, [query, page]);
+  }, [query, genres, page]);
 
   useEffect(() => {
-    if (location.search && location.search.includes('query')) {
+    if (location.search && (location.search.includes('query') || location.search.includes('genres'))) {
       const query = new URLSearchParams(location.search).get('query');
+      const genre = new URLSearchParams(location.search).get('genres');
       setQuery(query || '');
+      setGenres(genre || '');
     }
   }, [location])
 

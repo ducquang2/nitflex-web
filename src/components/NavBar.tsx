@@ -3,10 +3,10 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import classNames from "classnames";
 
-import { get_llm_movies, get_movies } from "@apis/movies";
+import { get_genres, get_llm_movies, get_movies } from "@apis/movies";
 import { get_user_profile } from "@apis/profile";
 import { addImagePrefix } from "@libs/utils/helpers";
-import { MovieInfo } from "@libs/utils/types";
+import { Genre, MovieInfo } from "@libs/utils/types";
 
 import { useAuth } from "./AuthProvider";
 import SearchBar from "./SeachBar";
@@ -32,6 +32,7 @@ const NavBar = (props: NavBarProps) => {
   const [query, setQuery] = useState("");
   const [isLLMSearch, setIsLLMSearch] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [genres, setGenres] = useState<Genre[]>([]);
 
   const handleLogout = () => {
     setShowLogoutModal(false);
@@ -64,6 +65,19 @@ const NavBar = (props: NavBarProps) => {
 
     checkUserProfile();
   }, [navigate]);
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const genresData = await get_genres();
+        setGenres(genresData);
+      } catch (error) {
+        console.error("Error fetching genres:", error);
+      }
+    };
+
+    fetchGenres();
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -111,6 +125,11 @@ const NavBar = (props: NavBarProps) => {
       </div>
       {showSearchBar && (
         <div className="flex flex-1 gap-4 justify-center items-center">
+          <label className="label cursor-pointer">
+            <span className="label-text mr-2 w-12">{isLLMSearch ? "LLM" : "Simple"}</span>
+            <input type="checkbox" className="toggle toggle-primary" checked={isLLMSearch} onChange={() => setIsLLMSearch(!isLLMSearch)} />
+          </label>
+
           <div className="w-3/5 dropdown dropdown-bottom">
             <SearchBar className="w-full" value={query} onChange={handleSearchInputChange} onSubmit={handleSearchSubmit} />
 
@@ -154,10 +173,21 @@ const NavBar = (props: NavBarProps) => {
               </ul>
             )}
           </div>
-          <label className="label cursor-pointer">
-            <span className="label-text mr-2 w-12">{isLLMSearch ? "LLM" : "Simple"}</span>
-            <input type="checkbox" className="toggle toggle-primary" checked={isLLMSearch} onChange={() => setIsLLMSearch(!isLLMSearch)} />
-          </label>
+
+          <div className="dropdown dropdown-bottom">
+            <label tabIndex={0} className="btn btn-ghost">
+              <i className="icon-funnel-mini" />
+            </label>
+            <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-80 z-20 h-64 overflow-x-auto">
+              {genres?.map((genre) => (
+                <li key={genre.Id} className="w-40">
+                  <Link to={`/movies?genre=${genre.Id}`}>
+                    {genre.Name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
       <div className="flex-none">
