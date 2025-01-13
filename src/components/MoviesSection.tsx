@@ -8,6 +8,7 @@ import { addImagePrefix } from "@libs/utils/helpers";
 import { MovieInfo } from "@libs/utils/types";
 
 type MoviesSectionProps = {
+  className?: string;
   title: string;
   titleClassName?: string;
   movies: MovieInfo[];
@@ -16,10 +17,10 @@ type MoviesSectionProps = {
 }
 
 const MoviesSection = (props: MoviesSectionProps) => {
-  const { title, titleClassName, movies, isLoading, rightHeader } = props
+  const { className, title, titleClassName, movies, isLoading, rightHeader } = props
 
   return (
-    <div className="space-y-2">
+    <div className={classNames("space-y-2", className)}>
       <div className="flex justify-between items-center mb-2">
         <h2 className={classNames("text-3xl font-bold", titleClassName)}>{title}</h2>
 
