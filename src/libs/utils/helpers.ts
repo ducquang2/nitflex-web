@@ -29,9 +29,19 @@ export function splitToSmallChunks(array: Array<MovieInfo>, n: number) {
   if (n >= array.length) return [array]
 
   const result: Array<Array<MovieInfo>> = []
-  for (let i = n; i > 0; i--) {
-    result.push(array.splice(0, Math.ceil(array.length / i)))
+  for (let i = 0; i < n; i++) {
+    result.push([])
   }
+
+  array.forEach((item, index) => {
+    result[index % n].push(item)
+  })
+
+  // Ensure the result is split into 4 columns
+  while (result.length < 4) {
+    result.push([])
+  }
+
   return result
 }
 

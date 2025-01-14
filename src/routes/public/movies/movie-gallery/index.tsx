@@ -61,9 +61,9 @@ const Movies = () => {
   }, [query, genres, page]);
 
   useEffect(() => {
-    if (location.search && (location.search.includes('query') || location.search.includes('genres'))) {
+    if (location.search && (location.search.includes('query') || location.search.includes('genre'))) {
       const query = new URLSearchParams(location.search).get('query');
-      const genre = new URLSearchParams(location.search).get('genres');
+      const genre = new URLSearchParams(location.search).get('genre');
       setQuery(query || '');
       setGenres(genre || '');
     }
@@ -77,7 +77,7 @@ const Movies = () => {
           onScroll={handleScroll}
         >
           {renderContent()}
-          {query && isLoading && (
+          {isLoading && (
             <div className="flex justify-center items-center">
               <span className="loading loading-infinity loading-lg" />
             </div>

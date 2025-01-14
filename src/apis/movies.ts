@@ -32,9 +32,9 @@ export const get_movies = async (params: getMoviesParams) => {
   const response = await nitflexApiAxios.get(`/movies?${searchParams.toString()}`)
 
   return {
-    results: response.data.data,
+    results: response.data.data.data,
     page: response.data.Page || 0,
-    totalPages: response.data.total_pages || 0,
+    totalPages: response.data.data.max_page || 0,
     totalResults: response.data.total_results || 0,
   } as Pagination<MovieInfo>
 }
@@ -83,7 +83,7 @@ export const get_upcoming_movies = async () => {
   return {
     results: responeMovies.data,
     page: responeMovies.Page || 0,
-    totalPages: responeMovies.total_pages || 0,
+    totalPages: responeMovies.max_page || 0,
     totalResults: responeMovies.total_results || 0,
   } as Pagination<MovieInfo>
 }
@@ -135,7 +135,7 @@ export const get_llm_movies = async (params: getMoviesParams) => {
     return {
       results: moviesResponse.data.data,
       page: moviesResponse.data.Page || 0,
-      totalPages: moviesResponse.data.total_pages || 0,
+      totalPages: moviesResponse.data.max_page || 0,
       totalResults: moviesResponse.data.total_results || 0,
     } as Pagination<MovieInfo>
   } catch (error) {

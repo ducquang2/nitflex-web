@@ -244,7 +244,13 @@ const MovieDetail = () => {
             <Detail title="Genres:" titleClassName="min-w-fit">
               <div className="carousel carousel-center w-full rounded-box space-x-4">
                 {movie.Genres.map((genre, idx) => (
-                  <div className="badge badge-neutral-content badge-outline min-w-fit flex-nowrap" key={idx}>{genre.Name}</div>
+                  <Link
+                    key={idx}
+                    to={`/movies?genre=${genre.Id}`}
+                    className="badge min-w-fit flex-nowrap badge-outline hover:border-primary hover:text-primary"
+                  >
+                    {genre.Name}
+                  </Link>
                 ))}
               </div>
             </Detail>

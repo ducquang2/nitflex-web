@@ -33,6 +33,7 @@ const NavBar = (props: NavBarProps) => {
   const [isLLMSearch, setIsLLMSearch] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [genres, setGenres] = useState<Genre[]>([]);
+  const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
 
   const handleLogout = () => {
     setShowLogoutModal(false);
@@ -114,6 +115,15 @@ const NavBar = (props: NavBarProps) => {
         setQuery(query);
       }
     }
+
+    if (location.search.includes('genre')) {
+      const searchParams = new URLSearchParams(location.search);
+      const genre = searchParams.get('genre');
+
+      if (genre) {
+        setSelectedGenre(Number(genre));
+      }
+    }
   }, [location]);
 
   return (
@@ -174,13 +184,13 @@ const NavBar = (props: NavBarProps) => {
             )}
           </div>
 
-          <div className="dropdown dropdown-bottom">
+          <div className="dropdown dropdown-bottom dropdown-left">
             <label tabIndex={0} className="btn btn-ghost">
               <i className="icon-funnel-mini" />
             </label>
-            <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-80 z-20 h-64 overflow-x-auto">
+            <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-80 z-20 max-h-64 overflow-x-auto">
               {genres?.map((genre) => (
-                <li key={genre.Id} className="w-40">
+                <li key={genre.Id} className={classNames("w-40 rounded-lg m-0.5", { "border border-primary text-primary": selectedGenre === genre.Id })}>
                   <Link to={`/movies?genre=${genre.Id}`}>
                     {genre.Name}
                   </Link>
