@@ -21,7 +21,7 @@ const Home = () => {
   // const [isGettingUpcomingMovies, setIsGettingUpcomingMovies] = useState(false);
   const [isGettingPopularMovies, setIsGettingPopularMovies] = useState(false);
 
-  const [timeWindow, setTimeWindow] = useState<'day' | 'week'>('day');
+  // const [timeWindow, setTimeWindow] = useState<'day' | 'week'>('day');
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -31,7 +31,7 @@ const Home = () => {
 
       try {
         const [trendingResponse, popularResponse, trailersResponse] = await Promise.all([
-          get_trending_movies({ time_window: timeWindow }),
+          get_trending_movies({ time_window: 'day' }),
           // get_upcoming_movies(),
           get_popular_movies(),
           get_trailers(),
@@ -53,7 +53,7 @@ const Home = () => {
     };
 
     fetchMovies();
-  }, [timeWindow]);
+  }, []);
 
   return (
     <div className="min-h-[calc(100dvh-5rem)] container w-full max-w-full">
@@ -80,21 +80,24 @@ const Home = () => {
       <div className="space-y-8 mt-8">
         <MoviesSection
           className='mx-6'
-          title={`${timeWindow === 'day' ? "Today" : "This Week"} Trending Movies`}
+          title="Today Trending Movies"
           isLoading={isGettingTrendingMovies}
           movies={trendingMovies}
           rightHeader={() => (
-            <div className="dropdown dropdown-end">
-              <label tabIndex={0} className="btn m-1">Time Window</label>
-              <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-10">
-                <li>
-                  <button onClick={() => setTimeWindow('day')}>Today</button>
-                </li>
-                <li>
-                  <button onClick={() => setTimeWindow('week')}>This Week</button>
-                </li>
-              </ul>
-            </div>
+            <>
+              <Link to="/movies" className="btn btn-primary">View All</Link>
+              {/* <div className="dropdown dropdown-end">
+                <label tabIndex={0} className="btn m-1">Time Window</label>
+                <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-10">
+                  <li>
+                    <button onClick={() => setTimeWindow('day')}>Today</button>
+                  </li>
+                  <li>
+                    <button onClick={() => setTimeWindow('week')}>This Week</button>
+                  </li>
+                </ul>
+              </div> */}
+            </>
           )}
         />
 

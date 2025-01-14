@@ -8,7 +8,7 @@ import { add_review, get_llm_movies, get_movie, get_movie_reviews, get_trailer }
 
 import Detail from "@components/Detail";
 
-import { add_favorite, add_rating, add_to_watch_list } from "@apis/profile";
+import { add_favorite, add_rating, add_to_watch_list, get_user_profile } from "@apis/profile";
 import MoviesSection from "@components/MoviesSection";
 import { useToast } from "@libs/hooks/useToast";
 import { LONG_DATE_FORMAT } from "@libs/utils/constants";
@@ -28,51 +28,15 @@ const MovieDetail = () => {
   const [isGettingRelatedMovies, setIsGettingRelatedMovies] = useState(false);
   const [relatedMovies, setRelatedMovies] = useState<MovieInfo[]>([]);
   const [trailerUrl, setTrailerUrl] = useState<string>();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    setIsLoading(true);
-
-    const getMovie = async () => {
-      if (id) {
-        const responeMovie = await get_movie({ id });
-        setIsLoading(false);
-        setMovie(responeMovie);
-
-        if (responeMovie?.TmdbId) {
-          const trailerResponse = await get_trailer({ id: responeMovie?.TmdbId.toString() });
-          if (trailerResponse.length > 0) {
-            setTrailerUrl(parseYoutubeLink(trailerResponse[0].key));
-          }
-        }
-      }
-    };
-
-    getMovie();
-  }, [id]);
-
-  useEffect(() => {
-    const getMovieReviews = async () => {
-      if (movie?.Id) {
-        const responeReviews = await get_movie_reviews({ id: movie.Id.toString() })
-
-        setReviews(responeReviews);
-      }
+  const requireLoggedIn = (callback: () => void) => {
+    if (isLoggedIn) {
+      callback();
+    } else {
+      toast.error('Please login to perform this action');
     }
-
-    const getRelatedMovies = async () => {
-      setIsGettingRelatedMovies(true);
-
-      if (movie?.Title) {
-        const response = await get_llm_movies({ query: movie?.Title });
-
-        setIsGettingRelatedMovies(false);
-        setRelatedMovies(response.results);
-      }
-    }
-
-    getRelatedMovies()
-    getMovieReviews()
-  }, [movie])
+  }
 
   const handleAddToWatchList = async () => {
     if (!movie) return;
@@ -153,6 +117,67 @@ const MovieDetail = () => {
     }
   }
 
+  useEffect(() => {
+    setIsLoading(true);
+
+    const getMovie = async () => {
+      if (id) {
+        const responeMovie = await get_movie({ id });
+        setIsLoading(false);
+        setMovie(responeMovie);
+
+        if (responeMovie?.TmdbId) {
+          const trailerResponse = await get_trailer({ id: responeMovie?.TmdbId.toString() });
+          if (trailerResponse.length > 0) {
+            setTrailerUrl(parseYoutubeLink(trailerResponse[0].key));
+          }
+        }
+      }
+    };
+
+    getMovie();
+  }, [id]);
+
+  useEffect(() => {
+    const getMovieReviews = async () => {
+      if (movie?.Id) {
+        const responeReviews = await get_movie_reviews({ id: movie.Id.toString() })
+
+        setReviews(responeReviews);
+      }
+    }
+
+    const getRelatedMovies = async () => {
+      setIsGettingRelatedMovies(true);
+
+      if (movie?.Title) {
+        const response = await get_llm_movies({ query: movie?.Title });
+
+        setIsGettingRelatedMovies(false);
+        setRelatedMovies(response.results);
+      }
+    }
+
+    getRelatedMovies()
+    getMovieReviews()
+  }, [movie])
+
+  useEffect(() => {
+    const checkUserProfile = async () => {
+      try {
+        await get_user_profile();
+        setIsLoggedIn(true);
+      } catch (error) {
+        // @ts-expect-error - This is a hack to check if the token is valid
+        if (error?.response?.data?.message === 'invalid token') {
+          setIsLoggedIn(false);
+        }
+      }
+    };
+
+    checkUserProfile();
+  }, []);
+
   if (isLoading) {
     return (
       <div className="h-full flex justify-center items-center">
@@ -209,7 +234,7 @@ const MovieDetail = () => {
 
               <button
                 className="btn btn-warning btn-outline rounded-full min-h-8 h-8 py-0"
-                onClick={showRatingModal}
+                onClick={() => requireLoggedIn(showRatingModal)}
               >
                 <span className="icon-star-micro" />
                 Rate
@@ -273,13 +298,13 @@ const MovieDetail = () => {
               <div className="flex gap-2">
                 <button
                   className="btn btn-warning rounded-xl"
-                  onClick={handleAddToWatchList}>
+                  onClick={() => requireLoggedIn(handleAddToWatchList)}>
                   <i className="icon-circle-plus-micro" />
                   Add to Watchlist
                 </button>
                 <button
                   className="btn btn-error rounded-xl"
-                  onClick={handleAddToFavorite}>
+                  onClick={() => requireLoggedIn(handleAddToFavorite)}>
                   <i className="icon-heart-micro" />
                   Add to Favorite
                 </button>
@@ -310,7 +335,7 @@ const MovieDetail = () => {
                     />
                     <button
                       className="btn btn-primary"
-                      onClick={handleAddReview}
+                      onClick={() => requireLoggedIn(handleAddReview)}
                       disabled={!reviewContent.trim()}
                     >
                       Submit
@@ -336,12 +361,12 @@ const MovieDetail = () => {
                       <p className="break-words overflow-hidden  line-clamp-3">
                         {review.Content}
                       </p>
-                      <Link
+                      {/* <Link
                         className="text-blue-500 inline-block mt-0"
                         to={review.URL}
                         target="_blank">
                         Read More
-                      </Link>
+                      </Link> */}
                     </div>
                   </div>
                 ))}
