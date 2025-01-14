@@ -111,7 +111,7 @@ type addReviewParams = {
 export const add_review = async (params: addReviewParams) => {
   const { movie_id, content } = params
 
-  const response = await nitflexApiAxios.post(`/reviews/`, { movie_id, content })
+  const response = await nitflexApiAxios.post('/reviews', { movie_id, content })
 
   return response.data
 }
