@@ -111,7 +111,7 @@ const Home = () => {
               <div key={trailer.Id} className="carousel-item w-1/2 md:w-1/3">
                 <div className="card w-full bg-transparent shadow-xl">
                   <figure className="relative w-full rounded-react-player">
-                    <ReactPlayer url={trailer.Link} width="100%" height="300px" />
+                    <ReactPlayer url={trailer.Link} width="100%" height="300px" controls />
                   </figure>
                   <div className="card-body p-4">
                     <h2 className="text-neutral-content text-center w-full text-lg font-bold">{trailer.Title}</h2>
