@@ -13,7 +13,7 @@ import GoogleLogin from '@components/GoogleLogin';
 const schema = z.object({
   email: z.string().email('Invalid email format').min(1, 'Email is required'),
   username: z.string().min(1, 'Username is required'),
-  password: z.string().min(8, 'Password must be at least 6 characters').min(1, 'Password is required'),
+  password: z.string().min(8, 'Password must be at least 8 characters').min(1, 'Password is required'),
 }).required();
 
 const Register = () => {

@@ -13,7 +13,7 @@ import GoogleLogin from '@components/GoogleLogin';
 
 const schema = z.object({
   username: z.string().min(1, 'Username is required'),
-  password: z.string().min(6, 'Password must be at least 6 characters').min(1, 'Password is required'),
+  password: z.string().min(8, 'Password must be at least 8 characters').min(1, 'Password is required'),
 });
 
 const Login = () => {
@@ -101,7 +101,7 @@ const Login = () => {
               <Link to="/register" className="link link-primary">
                 Don't have an account? Sign up
               </Link>
-              <Link to="/reset-password" className="link link-primary"              >
+              <Link to="/reset-password" className="link link-primary">
                 Forgot Password?
               </Link>
             </div>
