@@ -30,7 +30,7 @@ const Register = () => {
       setIsSubmitting(true);
       const response = await handle_register(data);
       if (response.status === 200)
-        toast.success('Signup successful!', {
+        toast.success('An activation link has been sent to your email!', {
           autoClose: 2000,
           onClose: () => {
             navigate('/login');

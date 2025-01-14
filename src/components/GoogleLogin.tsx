@@ -23,13 +23,13 @@ const GoogleLogin = (props: GoogleLoginProps) => {
   const onGoogleLogin = useGoogleLogin({
     onSuccess: async ({ access_token }) => {
       try {
-        const response = await nitflexApiAxios.post('/login/google', { access_token })
+        const response = await nitflexApiAxios.post('/login/google', { AccessToken: access_token })
         const result = response.data;
 
-        setToken(result.data.access_token);
-        localStorage.setItem('token', result.data.access_token);
+        setToken(result.data.AccessToken);
+        localStorage.setItem('token', result.data.AccessToken);
         if (onSubmit) onSubmit(true);
-        if (result.data.access_token)
+        if (result.data.AccessToken)
           toast.success('Login successful!', {
             onClose: () => {
               navigate('/');

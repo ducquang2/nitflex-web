@@ -2,12 +2,10 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { active_account } from '@apis/auth';
-import { useToast } from '@libs/hooks/useToast';
 
 const ActivateAccount = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const toast = useToast();
   const [isActivating, setIsActivating] = useState(true);
 
   useEffect(() => {
@@ -16,25 +14,18 @@ const ActivateAccount = () => {
       if (token) {
         try {
           await active_account(token);
-          toast.success('Account activated successfully!', {
-            onClose: () => {
-              navigate('/login');
-            },
-          });
         } catch (error) {
-          toast.error('Failed to activate account');
           console.error(error);
         } finally {
           setIsActivating(false);
         }
       } else {
-        toast.error('Invalid activation token');
         setIsActivating(false);
       }
     };
 
     activate();
-  }, [location, toast, navigate]);
+  }, [location]);
 
   return (
     <div className="h-[calc(100dvh-5rem)] flex items-center justify-center bg-base-200">

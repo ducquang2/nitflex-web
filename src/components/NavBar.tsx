@@ -191,7 +191,13 @@ const NavBar = (props: NavBarProps) => {
             <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-80 z-20 max-h-64 overflow-x-auto">
               {genres?.map((genre) => (
                 <li key={genre.Id} className={classNames("w-40 rounded-lg m-0.5", { "border border-primary text-primary": selectedGenre === genre.Id })}>
-                  <Link to={`/movies?genre=${genre.Id}`}>
+                  <Link
+                    to={{
+                      pathname: "/movies",
+                      search: `?genre=${genre.Id}`,
+                    }}
+                    replace
+                  >
                     {genre.Name}
                   </Link>
                 </li>
