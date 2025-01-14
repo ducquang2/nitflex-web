@@ -32,18 +32,22 @@ const Login = () => {
       const response = await handle_login(data);
       const result = response.data;
 
-      setToken(result.data.AccessToken);
-      localStorage.setItem('token', result.data.AccessToken);
-      if (result.data.AccessToken)
+      if (result.data?.AccessToken) {
+        setToken(result.data.AccessToken);
+        localStorage.setItem('token', result.data.AccessToken);
         toast.success('Login successful!', {
           onClose: () => {
             navigate('/');
           },
         });
+      } else {
+        toast.error(result.message);
+        setIsSubmitting(false);
+      }
     } catch (error) {
+      console.log(error);
       toast.error('An unexpected error occurred');
       setIsSubmitting(false);
-      console.error(error);
     }
   };
 
