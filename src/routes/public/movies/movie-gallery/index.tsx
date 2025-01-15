@@ -66,6 +66,7 @@ const Movies = () => {
       const genre = new URLSearchParams(location.search).get('genre');
       setQuery(query || '');
       setGenres(genre || '');
+      setMovies([]);
     }
   }, [location])
 
