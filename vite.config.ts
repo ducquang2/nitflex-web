@@ -7,7 +7,7 @@ export default ({ mode = 'development' }: UserConfig) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) }
 
   return defineConfig({
-    base: '/',
+    base: '/nitflex-web/',
     server: {
       port: process.env.VITE_PORT ? +process.env.VITE_PORT : 4444,
     },
