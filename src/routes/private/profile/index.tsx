@@ -1,28 +1,36 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import classNames from 'classnames';
+
+import { get_favorite_movies, get_user_profile, get_user_ratings, get_watch_list, remove_favorite, remove_from_watch_list } from '@apis/profile';
 import MovieCard from '@components/MovieCard';
-
-import { get_favorite_movies, get_user_profile, get_watch_list, get_user_ratings, remove_favorite, remove_from_watch_list } from '@apis/profile';
-
 import { MovieInfo, Rating, User } from '@libs/utils/types';
 
 const Profile = () => {
+  const navigate = useNavigate();
+
   const [user, setUser] = useState<User | null>(null);
   const [watchList, setWatchList] = useState<MovieInfo[]>([]);
   const [favoriteList, setFavoriteList] = useState<MovieInfo[]>([]);
   const [ratings, setRatings] = useState<Rating[]>([]);
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'ratings' | 'watchlist' | 'favorites'>('ratings');
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
+    setIsLoading(true);
+
     const getWatchList = async () => {
       const watchListResp = await get_watch_list();
       setWatchList(watchListResp);
+      setIsLoading(false);
     }
 
     const getFavoriteList = async () => {
       const favoriteListResp = await get_favorite_movies();
       setFavoriteList(favoriteListResp.data.Results);
+      setIsLoading(false);
     }
 
     const getUserProfile = async () => {
@@ -33,14 +41,14 @@ const Profile = () => {
     const getRatings = async () => {
       const ratingsResp = await get_user_ratings();
       setRatings(ratingsResp);
-      console.log(ratingsResp);
+      setIsLoading(false);
     }
 
     getUserProfile();
-    getWatchList();
-    getFavoriteList();
-    getRatings();
-  }, [navigate]);
+    if (activeTab === 'watchlist') getWatchList();
+    if (activeTab === 'favorites') getFavoriteList();
+    if (activeTab === 'ratings') getRatings();
+  }, [navigate, activeTab]);
 
   const handleRemoveFromWatchList = async (movieId: number) => {
     await remove_from_watch_list({ movie_id: movieId.toString() });
@@ -59,51 +67,61 @@ const Profile = () => {
           <div className="card bg-base-100 shadow-xl">
             <div className="card-body">
               <h2 className="text-xl mb-2">My Ratings</h2>
-              {ratings?.length === 0 ? (
-                <div className="alert alert-warning">
-                  <div>
-                    <span>You haven't rated any movies yet.</span>
+              {isLoading ? (
+                (<div className="flex justify-center items-center">
+                  <span className="loading loading-infinity loading-lg" />
+                </div>)
+              ) :
+                ratings?.length === 0 ? (
+                  <div className="alert alert-warning">
+                    <div>
+                      <span>You haven't rated any movies yet.</span>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <ul className="space-y-2">
-                  {ratings?.map((rating) => (
-                    <li key={rating.MovieId}>
-                      <MovieCard 
-                        movie={rating.Movie} 
-                        rating={rating.Rating}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              )}
+                ) : (
+                  <ul className="space-y-2">
+                    {ratings?.map((rating) => (
+                      <li key={rating.MovieId}>
+                        <MovieCard
+                          movie={rating.Movie}
+                          rating={rating.Rating}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                )}
             </div>
           </div>
         );
-      
+
       case 'watchlist':
         return (
           <div className="card bg-base-100 shadow-xl">
             <div className="card-body">
               <h2 className="text-xl mb-2">Watch List</h2>
-              {watchList?.length === 0 ? (
-                <div className="alert alert-warning">
-                  <div>
-                    <span>Your watch list is empty.</span>
+              {isLoading ? (
+                (<div className="flex justify-center items-center">
+                  <span className="loading loading-infinity loading-lg" />
+                </div>)
+              ) :
+                watchList?.length === 0 ? (
+                  <div className="alert alert-warning">
+                    <div>
+                      <span>Your watch list is empty.</span>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <ul className="space-y-2">
-                  {watchList?.map((movie) => (
-                    <li key={movie.Id}>
-                      <MovieCard 
-                        movie={movie}
-                        onRemove={() => handleRemoveFromWatchList(movie.Id)}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              )}
+                ) : (
+                  <ul className="space-y-2">
+                    {watchList?.map((movie) => (
+                      <li key={movie.Id}>
+                        <MovieCard
+                          movie={movie}
+                          onRemove={() => handleRemoveFromWatchList(movie.Id)}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                )}
             </div>
           </div>
         );
@@ -113,7 +131,11 @@ const Profile = () => {
           <div className="card bg-base-100 shadow-xl">
             <div className="card-body">
               <h2 className="text-xl mb-2">Favorite Movies</h2>
-              {favoriteList?.length === 0 ? (
+              {isLoading ? (
+                (<div className="flex justify-center items-center">
+                  <span className="loading loading-infinity loading-lg" />
+                </div>)
+              ) : favoriteList?.length === 0 ? (
                 <div className="alert alert-warning">
                   <div>
                     <span>Your favorite movies list is empty.</span>
@@ -123,7 +145,7 @@ const Profile = () => {
                 <ul className="space-y-2">
                   {favoriteList?.map((movie) => (
                     <li key={movie.Id}>
-                      <MovieCard 
+                      <MovieCard
                         movie={movie}
                         onRemove={() => handleRemoveFromFavoriteList(movie.Id)}
                       />
@@ -154,20 +176,20 @@ const Profile = () => {
           )}
 
           <div className="tabs tabs-boxed mb-4">
-            <button 
-              className={`tab ${activeTab === 'ratings' ? 'tab-active' : ''}`}
+            <button
+              className={classNames("tab", { 'tab-active': activeTab === 'ratings' })}
               onClick={() => setActiveTab('ratings')}
             >
               Ratings
             </button>
-            <button 
-              className={`tab ${activeTab === 'watchlist' ? 'tab-active' : ''}`}
+            <button
+              className={classNames("tab", { 'tab-active': activeTab === 'watchlist' })}
               onClick={() => setActiveTab('watchlist')}
             >
               Watch List
             </button>
-            <button 
-              className={`tab ${activeTab === 'favorites' ? 'tab-active' : ''}`}
+            <button
+              className={classNames("tab", { 'tab-active': activeTab === 'favorites' })}
               onClick={() => setActiveTab('favorites')}
             >
               Favorites
