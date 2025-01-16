@@ -78,9 +78,13 @@ const Movies = () => {
           onScroll={handleScroll}
         >
           {renderContent()}
-          {isLoading && (
+          {isLoading && (query || genres) ? (
             <div className="flex justify-center items-center">
               <span className="loading loading-infinity loading-lg" />
+            </div>
+          ) : (
+            <div className="flex justify-center items-center">
+              Search for movies by typing in the search bar above.
             </div>
           )}
         </div>

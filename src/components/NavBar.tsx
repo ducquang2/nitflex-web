@@ -144,7 +144,7 @@ const NavBar = (props: NavBarProps) => {
             <SearchBar className="w-full" value={query} onChange={handleSearchInputChange} onSubmit={handleSearchSubmit} />
 
             {query && canShowDropdown && (
-              <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-4/5 p-2 mt-2 shadow">
+              <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-full p-2 mt-2 shadow">
                 {isLoading ? (
                   <div className="h-14 flex justify-center items-center">
                     <span className="loading loading-dots loading-md" />
@@ -184,7 +184,7 @@ const NavBar = (props: NavBarProps) => {
             )}
           </div>
 
-          <div className="dropdown dropdown-bottom dropdown-left">
+          <div className="dropdown dropdown-bottom">
             <label tabIndex={0} className="btn btn-ghost">
               <i className="icon-funnel-mini" />
             </label>
