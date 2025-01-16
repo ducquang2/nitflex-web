@@ -36,6 +36,7 @@ const ResetPassword = () => {
 
   const [resetToken, setResetToken] = useState('');
   const [step, setStep] = useState(1);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { register: registerEmail, handleSubmit: handleSubmitEmail, formState: { errors: emailErrors } } = useForm<ResetPasswordEmail>({
     resolver: zodResolver(emailSchema),
@@ -106,7 +107,7 @@ const ResetPassword = () => {
           </form>
         ) : (
           <form onSubmit={handleSubmitPassword(handleResetPassword)} className="card-body">
-            <div className="form-control">
+            <div className="form-control relative">
               <label className="label" htmlFor="newPassword">
                 <p className="label-text">
                   New Password
@@ -114,11 +115,21 @@ const ResetPassword = () => {
                 </p>
               </label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="newPassword"
                 className={`input input-bordered ${passwordErrors.newPassword ? 'input-error' : ''}`}
                 {...registerPassword('newPassword')}
               />
+              <span
+                className="absolute right-3 top-12 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <i className="icon-eye-mini" />
+                ) : (
+                  <i className="icon-eye-off-mini" />
+                )}
+              </span>
               {passwordErrors.newPassword && (
                 <p className="label-text-alt text-red-500">{passwordErrors?.newPassword?.message}</p>
               )}

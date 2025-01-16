@@ -21,6 +21,7 @@ const Login = () => {
     resolver: zodResolver(schema),
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { setToken } = useAuth();
   const toast = useToast();
@@ -72,7 +73,7 @@ const Login = () => {
               <p className="label-text-alt text-red-500">{errors.username.message}</p>
             )}
           </div>
-          <div className="form-control">
+          <div className="form-control relative">
             <label className="label" htmlFor="password">
               <p className="label-text">
                 Password
@@ -80,11 +81,21 @@ const Login = () => {
               </p>
             </label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               className={`input input-bordered ${errors.password ? 'input-error' : ''}`}
               {...register('password')}
             />
+            <span
+              className="absolute right-3 top-12 cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? (
+                <i className="icon-eye-mini" />
+              ) : (
+                <i className="icon-eye-off-mini" />
+              )}
+            </span>
             {errors.password && (
               <p className="label-text-alt text-red-500">{errors.password.message}</p>
             )}
