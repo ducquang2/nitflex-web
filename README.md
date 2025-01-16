@@ -2,16 +2,21 @@
 
 This project is part of the Advanced Web Programming course - VNUHCMUS - 2024.
 
-## Students Infomation
+## Students Information
 
-- Student Name: Nguyen Duc Quang
-- Student ID: 20120359
+- Student 1:
 
-- Student Name: Nguyen Huynh Huu Khang
-- Student ID: 21120262
+  - Name: Nguyen Duc Quang
+  - ID: 20120359
 
-- Student Name: Tran Gia Bach
-- Student ID: 21120412
+- Student 2:
+
+  - Name: Nguyen Huynh Huu Khang
+  - ID: 21120262
+
+- Student 3:
+  - Name: Tran Gia Bach
+  - ID: 21120412
 
 ## How to run
 
